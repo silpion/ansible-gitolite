@@ -1,0 +1,6 @@
+Host localhost
+  HashKnownHosts no
+  UserKnownHostsFile /dev/null
+  StrictHostKeyChecking no
+  GSSAPIAuthentication no
+  PasswordAuthentication no

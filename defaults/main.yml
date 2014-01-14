@@ -1,0 +1,5 @@
+---
+gitolite_user:
+  home: /srv/git
+  name: git
+  group: git

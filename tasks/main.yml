@@ -1,0 +1,78 @@
+---
+# create gitolite user and group
+#   group
+- name: create gitolite group
+  tags: gitolite
+  group:
+    state=present
+    name={{ gitolite_user.group }}
+    system=yes
+#   user
+- name: create gitolite user
+  tags: gitolite
+  user:
+    state=present
+    name={{ gitolite_user.name }}
+    group={{ gitolite_user.group }}
+    home={{ gitolite_user.home }}
+    createhome=yes
+    generate_ssh_key=yes
+    ssh_key_bits=4096
+    ssh_key_type=rsa
+    ssh_key_comment="Gitolite Service"
+
+
+# manage gitolite users' ssh configuration
+- name: install gitolite ssh configuration
+  tags: gitolite
+  copy:
+    src=ssh_config
+    dest={{ gitolite_user.home }}/.ssh/config
+    mode=0600
+    owner={{ gitolite_user.name }}
+    group={{ gitolite_user.group }}
+
+
+# install required middleware
+- name: install package git
+  tags: gitolite
+  apt:
+    state=latest
+    pkg=git
+    update_cache=yes
+
+
+# setup gitolite
+- name: install directories for gitolite
+  tags: gitolite
+  file:
+    state=directory
+    dest={{ item }}
+    mode=0755
+    owner=root
+    group=root
+  with_items:
+    - /usr/local/lib/gitolite
+    - /usr/local/src/gitolite
+
+- name: git clone gitolite
+  tags: gitolite
+  git:
+    force=yes
+    repo={{ gitolite_url }}
+    version={{ gitolite_tag }}
+    remote=github
+    dest=/usr/local/src/gitolite
+
+- name: install gitolite
+  tags: gitolite
+  action: command /usr/local/src/gitolite/install -to /usr/local/lib/gitolite
+    creates=/usr/local/lib/gitolite/gitolite
+
+- name: initialize gitolite
+  tags: gitolite
+  sudo: yes
+  sudo_user: "{{ gitolite_user.name }}"
+  action: command /usr/local/lib/gitolite/gitolite setup -pk {{ gitolite_user.home }}/.ssh/id_rsa.pub
+    chdir={{ gitolite_user.home }}
+    creates={{ gitolite_user.home }}/.gitolite
