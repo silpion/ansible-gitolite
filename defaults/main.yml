@@ -1,5 +1,4 @@
 ---
-gitolite_user:
-  home: /srv/git
-  name: git
-  group: git
+gitolite_user_group: git
+gitolite_user_name: git
+gitolite_user_home: /srv/git
