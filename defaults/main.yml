@@ -2,3 +2,7 @@
 gitolite_user_group: git
 gitolite_user_name: git
 gitolite_user_home: /srv/git
+
+
+#gitolite_repositories:
+#  - { repo: "gitolite-admin", admin: [{{ gitolite_user_name}}], rw: [], ro: [] }
