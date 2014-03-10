@@ -2,14 +2,38 @@
 
 This role installs gitolite from upstream Git repository.
 
-# ansible-gitolite variables
+# TODO
 
-- gitolite_user_group       [git]
-- gitolite_user_name        [git]
-- gitolite_user_home        [/srv/git]
+* Basic gitolite-admin repository management (admin.yml)
+  * Allow passing repositories including access control.
+  * Allow dynamic installation of SSH keys/gitolite users.
+  * Generate gitolite configuration based on data.
 
 
-# ansible-gitolite example playbook
+# Requirements
+
+None.
+
+
+# Role variables
+
+## gitolite_user_group
+
+Configure the name of the group for the gitolite service user.
+* Default: git
+
+## gitolite_user_name
+
+Configure the name of the gitolite service user.
+* Default: git
+
+## gitolite_user_home
+
+Configure the home (and service) directory for the gitolite service.
+* Default: /srv/git
+
+
+# Example playbook
 
     # using the defaults
     ---
