@@ -1,0 +1,4 @@
+---
+gitolite_package_manager: zypper
+gitolite_package_list:
+  - git
