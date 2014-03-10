@@ -13,7 +13,7 @@ galaxy_info:
   description: Install gitolite from upstream Git repository
   company: http://silpion.de
   license: Apache 2
-  min_ansible_version: 1.4
+  min_ansible_version: 1.5
  
   #
   # Below are all platforms currently available. Just uncomment
