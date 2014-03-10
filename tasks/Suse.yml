@@ -1,4 +1,0 @@
----
-- name: install package git
-  tags: gitolite
-  zypper: pkg=git

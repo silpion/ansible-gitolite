@@ -1,4 +1,0 @@
----
-- name: install package git
-  tags: gitolite
-  pacman: pkg=git

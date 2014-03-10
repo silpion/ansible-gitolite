@@ -1,19 +1,20 @@
 ---
 # Fail the play if running on an unsupported platform
-- name: Fail on unsupported platform
+- name: Assert platform is supported
   tags: gitolite
-  fail: msg="Operating system not supported: {{ ansible_os_family }}"
-  when: ansible_os_family not in ['Debian', 'RedHat', 'Suse', 'Archlinux']
+  assert:
+    that:
+      - ansible_os_family in ['Archlinux', 'Debian', 'RedHat', 'Suse']
+
 
 # manage installation of required packages
-- include: Debian.yml
-  when: ansible_os_family == "Debian"
-- include: RedHat.yml
-  when: ansible_os_family == "RedHat"
-- include: Suse.yml
-  when: ansible_os_family == "Suse"
-- include: Archlinux.yml
-  when: ansible_os_family == "Archlinux"
+- include_vars: "{{ ansible_os_family }}.yml"
+  tags: gitolite
+
+- name: Install required packages
+  tags: gitolite
+  action: "{{ gitolite_package_manager }} state=present name={{ item }}"
+  with_items: gitolite_package_list
 
 
 # create gitolite user and group
@@ -80,7 +81,11 @@
 - name: initialize gitolite
   tags: gitolite
   sudo: yes
-  sudo_user: "{{ gitolite_user.name }}"
+  sudo_user: "{{ gitolite_user_name }}"
   action: command /usr/local/lib/gitolite/gitolite setup -pk {{ gitolite_user_home }}/.ssh/id_rsa.pub
     chdir={{ gitolite_user_home }}
     creates={{ gitolite_user_home }}/.gitolite
+
+
+#- include: admin.yml
+#  tags: [gitolite_admin, gitolite]
