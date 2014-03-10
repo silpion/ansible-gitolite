@@ -1,0 +1,29 @@
+---
+- name: git clone gitolite-admin
+  tags: [gitolite_admin, gitolite]
+  sudo: yes
+  sudo_user: "{{ gitolite_user_name }}"
+  git:
+    force=yes
+    repo={{ gitolite_user_home }}/repositories/gitolite-admin.git
+    remote=origin
+    dest={{ gitolite_user_home }}/gitolite-admin
+
+
+# - name: install gitolite admin ssh keys
+#   tags: [gitolite_admin, gitolite]
+#   sudo: yes
+#   sudo_user: "{{ gitolite_user_name }}"
+# 
+# 
+# - name: configure gitolite-admin
+#   tags: [gitolite_admin, gitolite]
+#   sudo: yes
+#   sudo_user: "{{ gitolite_user_name }}"
+#   template:
+#     src=gitolite.conf.j2
+#     dest={{ gitolite_user_home }}/gitolite-admin/conf/gitolite.conf
+#     mode=0644
+#     owner={{ gitolite_user_name }}
+#     group={{ gitolite_user_group }}
+#   register: gitolite_conf
