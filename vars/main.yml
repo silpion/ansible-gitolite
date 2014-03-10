@@ -1,3 +1,5 @@
 ---
-gitolite_url: git://github.com/sitaramc/gitolite
-gitolite_tag: v3.5.3.1
+gitolite_role_version: '0.2.0'
+
+gitolite_url: 'git://github.com/sitaramc/gitolite'
+gitolite_tag: 'v3.5.3.1'

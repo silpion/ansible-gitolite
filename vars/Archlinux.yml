@@ -1,0 +1,4 @@
+---
+gitolite_package_manager: pacman
+gitolite_package_list:
+  - git

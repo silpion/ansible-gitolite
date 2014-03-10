@@ -2,25 +2,28 @@
 
 # push changes in the repository to the remote
 - name: git push gitolite-admin
+  tags: [gitolite_admin, gitolite]
   sudo: yes
-  sudo_user: "{{ gitolite_user.name }}"
+  sudo_user: "{{ gitolite_user_name }}"
   command: git push
-    chdir={{ gitolite_user.home }}/gitolite-admin
+    chdir={{ gitolite_user_home }}/gitolite-admin
 
 
 # commit staged changes into the repository
 - name: git commit gitolite-admin
+  tags: [gitolite_admin, gitolite]
   sudo: yes
-  sudo_user: "{{ gitolite_user.name }}"
+  sudo_user: "{{ gitolite_user_name }}"
   command: git commit -am 'Updated gitolite-admin by Ansible'
-    chdir={{ gitolite_user.home }}/gitolite-admin
+    chdir={{ gitolite_user_home }}/gitolite-admin
   notify: git push gitolite-admin
 
 
 # add changes to the staging area
 - name: git add gitolite-admin
+  tags: [gitolite_admin, gitolite]
   sudo: yes
-  sudo_user: "{{ gitolite_user.name }}"
+  sudo_user: "{{ gitolite_user_name }}"
   command: git add .
-    chdir={{ gitolite_user.home }}/gitolite-admin
+    chdir={{ gitolite_user_home }}/gitolite-admin
   notify: git commit gitolite-admin

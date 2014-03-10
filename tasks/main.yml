@@ -1,20 +1,38 @@
 ---
+# Fail the play if running on an unsupported platform
+- name: Assert platform is supported
+  tags: gitolite
+  assert:
+    that:
+      - ansible_os_family in ['Archlinux', 'Debian', 'RedHat', 'Suse']
+
+
+# manage installation of required packages
+- include_vars: "{{ ansible_os_family }}.yml"
+  tags: gitolite
+
+- name: Install required packages
+  tags: gitolite
+  action: "{{ gitolite_package_manager }} state=present name={{ item }}"
+  with_items: gitolite_package_list
+
+
 # create gitolite user and group
 #   group
 - name: create gitolite group
   tags: gitolite
   group:
     state=present
-    name={{ gitolite_user.group }}
+    name={{ gitolite_user_group }}
     system=yes
 #   user
 - name: create gitolite user
   tags: gitolite
   user:
     state=present
-    name={{ gitolite_user.name }}
-    group={{ gitolite_user.group }}
-    home={{ gitolite_user.home }}
+    name={{ gitolite_user_name }}
+    group={{ gitolite_user_group }}
+    home={{ gitolite_user_home }}
     createhome=yes
     generate_ssh_key=yes
     ssh_key_bits=4096
@@ -27,19 +45,10 @@
   tags: gitolite
   copy:
     src=ssh_config
-    dest={{ gitolite_user.home }}/.ssh/config
+    dest={{ gitolite_user_home }}/.ssh/config
     mode=0600
-    owner={{ gitolite_user.name }}
-    group={{ gitolite_user.group }}
-
-
-# install required middleware
-- name: install package git
-  tags: gitolite
-  apt:
-    state=latest
-    pkg=git
-    update_cache=yes
+    owner={{ gitolite_user_name }}
+    group={{ gitolite_user_group }}
 
 
 # setup gitolite
@@ -72,7 +81,11 @@
 - name: initialize gitolite
   tags: gitolite
   sudo: yes
-  sudo_user: "{{ gitolite_user.name }}"
-  action: command /usr/local/lib/gitolite/gitolite setup -pk {{ gitolite_user.home }}/.ssh/id_rsa.pub
-    chdir={{ gitolite_user.home }}
-    creates={{ gitolite_user.home }}/.gitolite
+  sudo_user: "{{ gitolite_user_name }}"
+  action: command /usr/local/lib/gitolite/gitolite setup -pk {{ gitolite_user_home }}/.ssh/id_rsa.pub
+    chdir={{ gitolite_user_home }}
+    creates={{ gitolite_user_home }}/.gitolite
+
+
+#- include: admin.yml
+#  tags: [gitolite_admin, gitolite]
