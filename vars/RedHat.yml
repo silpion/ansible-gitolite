@@ -2,3 +2,5 @@
 gitolite_package_manager: yum
 gitolite_package_list:
   - git
+  - perl
+  - perl-Time-HiRes

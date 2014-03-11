@@ -4,7 +4,7 @@
   tags: gitolite
   assert:
     that:
-      - ansible_os_family in ['Archlinux', 'Debian', 'RedHat', 'Suse']
+      - ansible_os_family in ['Debian', 'RedHat']
 
 
 # manage installation of required packages
@@ -13,7 +13,7 @@
 
 - name: Install required packages
   tags: gitolite
-  action: "{{ gitolite_package_manager }} state=present name={{ item }}"
+  action: "{{ gitolite_package_manager }} state=installed name={{ item }}"
   with_items: gitolite_package_list
 
 
