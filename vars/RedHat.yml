@@ -4,3 +4,5 @@ gitolite_package_list:
   - git
   - perl
   - perl-Time-HiRes
+gitolite_package_list_selinux:
+  - libselinux-python

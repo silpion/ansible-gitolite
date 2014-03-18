@@ -1,0 +1,4 @@
+---
+- name: Install Ansible SELinux requirements
+  action: "{{ gitolite_package_manager }} state=installed name={{ item }}"
+  with_items: gitolite_package_list_selinux
