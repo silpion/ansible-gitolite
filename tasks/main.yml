@@ -11,6 +11,10 @@
 - include_vars: "{{ ansible_os_family }}.yml"
   tags: gitolite
 
+# manage SELinux
+- include: selinux.yml
+  tags: gitolite
+
 - name: Install required packages
   tags: gitolite
   action: "{{ gitolite_package_manager }} state=installed name={{ item }}"

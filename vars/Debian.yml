@@ -3,3 +3,5 @@ gitolite_package_manager: apt
 gitolite_package_list:
   - git
   - perl
+gitolite_package_list_selinux:
+  - python-selinux
