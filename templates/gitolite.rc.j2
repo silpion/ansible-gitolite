@@ -1,0 +1,55 @@
+#   ____________________
+#  < Managed by Ansible >
+#   --------------------
+#          \   ^__^
+#           \  (oo)\_______
+#              (__)\       )\/\
+#                  ||----w |
+#                  ||     ||
+#
+
+%RC = (
+  UMASK => {{ gitolite_gitoliterc_umask }},
+
+  GIT_CONFIG_KEYS => '{{ gitolite_gitoliterc_git_config_keys }}',
+
+{% if gitolite_gitoliterc_log_extra == true %}
+  LOG_EXTRA => 1,
+{% endif %}
+
+{% if gitolite_gitoliterc_display_cpu_time == true %}
+  DISPLAY_CPU_TIME => 1,
+  CPU_TIME_WARN_LIMIT => {{ gitolite_gitoliterc_cpu_time_warn_limit }},
+{%- endif %}
+
+{% if gitolite_gitoliterc_site_info != '' %}
+  SITE_INFO => '{{ gitolite_gitoliterc_site_info }}',
+{%- endif %}
+
+{% if gitolite_gitoliterc_writer_can_update_desc == true %}
+  WRITER_CAN_UPDATE_DESC => 1,
+{%- endif %}
+
+{% if gitolite_gitoliterc_hostname != '' %}
+  HOSTNAME => '{{ gitolite_gitoliterc_hostname }}',
+{%- endif %}
+
+{% if gitolite_gitoliterc_shell_user_list|count != 0 %}
+  SHELL_USERS_LIST => '{{ gitolite_user_home }}/.gitolite.rc.shell_user',
+{%- endif %}
+
+  ROLES => {
+{% for role in gitolite_gitoliterc_roles %}
+    {{ role }} => 1,
+{% endfor %}
+  },
+
+  ENABLE => [
+{% for feature in gitolite_gitoliterc_enable_features %}
+    '{{ feature }}',
+{% endfor %}
+  ],
+
+);
+
+1;

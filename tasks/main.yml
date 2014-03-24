@@ -82,6 +82,25 @@
   action: command /usr/local/src/gitolite/install -to /usr/local/lib/gitolite
     creates=/usr/local/lib/gitolite/gitolite
 
+- name: install gitolite configuration
+  tags: gitolitecount
+  template:
+    src=gitolite.rc.j2
+    dest={{ gitolite_user_home }}/.gitolite.rc
+    mode=0640
+    owner={{ gitolite_user_name }}
+    group={{ gitolite_user_group }}
+
+- name: install gitolite shell user list
+  tags: gitolitecount
+  template:
+    src=gitolite.rc.shell_user.j2
+    dest={{ gitolite_user_home }}/.gitolite.rc.shell_user
+    mode=0640
+    owner={{ gitolite_user_name }}
+    group={{ gitolite_user_group }}
+  when: gitolite_gitoliterc_shell_user_list|count != 0
+
 - name: initialize gitolite
   tags: gitolite
   sudo: yes
