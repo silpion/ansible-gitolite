@@ -83,7 +83,7 @@
     creates=/usr/local/lib/gitolite/gitolite
 
 - name: install gitolite configuration
-  tags: gitolitecount
+  tags: gitolite
   template:
     src=gitolite.rc.j2
     dest={{ gitolite_user_home }}/.gitolite.rc
@@ -92,7 +92,7 @@
     group={{ gitolite_user_group }}
 
 - name: install gitolite shell user list
-  tags: gitolitecount
+  tags: gitolite
   template:
     src=gitolite.rc.shell_user.j2
     dest={{ gitolite_user_home }}/.gitolite.rc.shell_user
