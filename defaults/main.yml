@@ -3,6 +3,70 @@ gitolite_user_group: git
 gitolite_user_name: git
 gitolite_user_home: /srv/git
 
+# gitolite.rc
+#   default umask for gitolite to create files and directories
+gitolite_gitoliterc_umask: '0027'
+
+#   see git-config in the gitolite documenation
+gitolite_gitoliterc_git_config_keys: ""
+
+#   verbose log information
+gitolite_gitoliterc_log_extra: true
+
+#   Tell the user about system CPU cycles used
+gitolite_gitoliterc_display_cpu_time: true
+#   Show a warning when CPU user cycles used more than VALUE time
+gitolite_gitoliterc_cpu_time_warn_limit: '0.2'
+
+#   Configure a site information string
+gitolite_gitoliterc_site_info: ""
+
+#   Allow the WRITERS role to update descriptions
+gitolite_gitoliterc_writer_can_update_desc: false
+
+#   Configure the sites hostname. Manadatory for the mirroring feature.
+gitolite_gitoliterc_hostname: ""
+
+#   List of users which are shell accounts. Mandatory when 'Shell' is enabled.
+gitolite_gitoliterc_shell_user_list: []
+
+#   gitolite roles.
+gitolite_gitoliterc_roles: ['READERS', 'WRITERS']
+
+#   features to enable
+gitolite_gitoliterc_enable_features:
+  - help
+  - desc
+  - info
+  - perms
+  - writable
+  - ssh_authkeys
+  - git-config
+  - daemon
+  - gitweb
+#    list of existing features disabled by default
+# - create
+# - fork
+# - mirror
+# - sskm
+# - D
+# - no-create-on-read
+# - no-auto-create
+# - Alias
+# - Shell
+# - set-default-roles
+# - Mirroring
+# - ssh-authkeys-split
+# - partial-copy
+# - upstream
+# - cgit
+# - repo-specific-hooks
+# - renice
+# - CpuTime
+# - continuation-lines
+# - keysubdirs-as-groups
+# - macros
+
 
 #gitolite_repositories:
 #  - { repo: "gitolite-admin", admin: [{{ gitolite_user_name}}], rw: [], ro: [] }
