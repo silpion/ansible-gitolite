@@ -1,5 +1,4 @@
 ---
-gitolite_package_manager: apt
 gitolite_package_list:
   - git
   - perl
