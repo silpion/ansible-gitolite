@@ -65,8 +65,8 @@
     owner=root
     group=root
   with_items:
-    - /usr/local/lib/gitolite
     - /usr/local/src/gitolite
+    - "{{ gitolite_install_dir }}"
 
 - name: git clone gitolite
   tags: gitolite
@@ -79,8 +79,8 @@
 
 - name: install gitolite
   tags: gitolite
-  action: command /usr/local/src/gitolite/install -to /usr/local/lib/gitolite
-    creates=/usr/local/lib/gitolite/gitolite
+  action: command /usr/local/src/gitolite/install -to {{ gitolite_install_dir }}
+    creates={{ gitolite_install_dir }}/gitolite
 
 - name: install gitolite configuration
   tags: gitolite
@@ -105,7 +105,7 @@
   tags: gitolite
   sudo: yes
   sudo_user: "{{ gitolite_user_name }}"
-  action: command /usr/local/lib/gitolite/gitolite setup -pk {{ gitolite_user_home }}/.ssh/id_rsa.pub
+  action: command {{ gitolite_install_dir }}/gitolite setup -pk {{ gitolite_user_home }}/.ssh/id_rsa.pub
     chdir={{ gitolite_user_home }}
     creates={{ gitolite_user_home }}/.gitolite
 

@@ -3,6 +3,8 @@ gitolite_user_group: git
 gitolite_user_name: git
 gitolite_user_home: /srv/git
 
+gitolite_install_dir: /usr/local/lib/gitolite
+
 # gitolite.rc
 #   default umask for gitolite to create files and directories
 gitolite_gitoliterc_umask: '0027'
