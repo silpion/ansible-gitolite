@@ -42,7 +42,7 @@ gitolite_gitoliterc_enable_features:
   - info
   - perms
   - writable
-  - ssh_authkeys
+  - ssh-authkeys
   - git-config
   - daemon
   - gitweb
