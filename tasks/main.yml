@@ -110,5 +110,10 @@
     creates={{ gitolite_user_home }}/.gitolite
 
 
+# configure smart-https for gitolite
+- include: https.yml
+  tags: gitolite
+  when: gitolite_http_enable
+
 #- include: admin.yml
 #  tags: [gitolite_admin, gitolite]

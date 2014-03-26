@@ -1,0 +1,49 @@
+---
+- name: install required packages for smart https
+  tags: gitolite_httpd
+  action: "{{ ansible_pkg_mgr }} state=installed name={{ item }}"
+  with_items: gitolite_package_list_https
+
+- name: install httpd document root directory
+  tags: gitolite_httpd
+  file:
+    state=directory
+    dest={{ gitolite_httpd_document_root }}
+    mode=0755
+    owner=0
+    group=0
+
+- name: install httpd suexec directory
+  tags: gitolite_httpd
+  file:
+    state=directory
+    dest={{ gitolite_httpd_cgi_bin }}
+    mode=0755
+    owner={{ gitolite_user_name }}
+    group={{ gitolite_user_group }}
+
+- name: install httpd suexec gitolite wrapper script
+  tags: gitolite_httpd
+  template:
+    src=httpd-suexec-wrapper.sh.j2
+    dest={{ gitolite_httpd_cgi_bin }}/gitolite-suexec-wrapper.sh
+    mode=0755
+    owner={{ gitolite_user_name }}
+    group={{ gitolite_user_group }}
+
+- name: install httpd configuration
+  tags: gitolite_httpd
+  template:
+    src=httpd.conf.j2
+    dest={{ gitolite_httpd_sites }}/{{ gitolite_httpd_sitename }}.conf
+    mode=0644
+    owner=0
+    group=0
+  notify: service restart httpd
+
+- name: service enable httpd
+  tags: gitolite_httpd
+  service:
+    state=started
+    name={{ gitolite_httpd_service }}
+    enabled=true

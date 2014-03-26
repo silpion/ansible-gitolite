@@ -5,3 +5,8 @@ gitolite_package_list:
   - perl-Time-HiRes
 gitolite_package_list_selinux:
   - libselinux-python
+gitolite_package_list_https:
+  - httpd
+
+gitolite_httpd_service: httpd
+gitolite_https_htaccess_file: /etc/httpd/gitolite.passwd

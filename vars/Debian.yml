@@ -4,3 +4,8 @@ gitolite_package_list:
   - perl
 gitolite_package_list_selinux:
   - python-selinux
+gitolite_package_list_https:
+  - apache2
+
+gitolite_httpd_service: apache2
+gitolite_https_htaccess_file: /etc/apache2/gitolite.passwd

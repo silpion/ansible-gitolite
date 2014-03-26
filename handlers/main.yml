@@ -27,3 +27,11 @@
   command: git add .
     chdir={{ gitolite_user_home }}/gitolite-admin
   notify: git commit gitolite-admin
+
+
+# httpd server
+- name: service restart httpd
+  tags: gitolite_httpd
+  service:
+    state=restarted
+    name={{ gitolite_httpd_service }}
