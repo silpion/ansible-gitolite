@@ -27,3 +27,11 @@
   command: git add .
     chdir={{ gitolite_user_home }}/gitolite-admin
   notify: git commit gitolite-admin
+
+
+# update gitolte configuration/setup
+- name: gitolite setup
+  tags: gitolite
+  sudo: yes
+  sudo_user: "{{ gitolite_user_name }}"
+  command: "{{ gitolite_install_dir }}/gitolite setup"
