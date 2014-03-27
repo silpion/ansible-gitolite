@@ -1,17 +1,32 @@
 ---
+# gitolite service user
 gitolite_user_group: git
 gitolite_user_name: git
 gitolite_user_home: /srv/git
 
+# gitolite installation directory
+gitolite_install_dir: /usr/local/gitolite
+
+# gitolite hostname configuration
+gitolite_hostname: localhost
+gitolite_domainname: localdomain
+
+
+# gitolite service user git configuration
+gitolite_gitconfig_user_name: 'Git Service'
+gitolite_gitconfig_user_email: "{{ gitolite_user_name }}@{{ gitolite_hostname }}.{{ gitolite_domainname }}"
+gitolite_gitconfig_push_default: simple
+
+
+# gitolite service https configuration
 gitolite_https_enable: false
 gitolite_https_admin_user: git
 gitolite_https_admin_pass: ""
 
-gitolite_install_dir: /usr/local/gitolite
-
 # configuration settings for the httpd daemon
 #   if gitolite_https_enable == true
 gitolite_httpd_document_root: /var/empty/www
+
 
 # gitolite.rc
 #   default umask for gitolite to create files and directories
@@ -35,7 +50,7 @@ gitolite_gitoliterc_site_info: ""
 gitolite_gitoliterc_writer_can_update_desc: false
 
 #   Configure the sites hostname. Manadatory for the mirroring feature.
-gitolite_gitoliterc_hostname: ""
+gitolite_gitoliterc_hostname: "{{ gitolite_hostname }}.{{ gitolite_domainname }}"
 
 #   List of users which are shell accounts. Mandatory when 'Shell' is enabled.
 gitolite_gitoliterc_shell_user_list: []

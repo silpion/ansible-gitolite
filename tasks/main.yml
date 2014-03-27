@@ -54,6 +54,16 @@
     owner={{ gitolite_user_name }}
     group={{ gitolite_user_group }}
 
+# manage gitolite users' git configuration
+- name: install gitolite git configuration
+  tags: gitolite
+  template:
+    src=gitolite.gitconfig.j2
+    dest={{ gitolite_user_home }}/.gitconfig
+    mode=0600
+    owner={{ gitolite_user_name }}
+    group={{ gitolite_user_group }}
+
 
 # setup gitolite
 - name: install directories for gitolite
