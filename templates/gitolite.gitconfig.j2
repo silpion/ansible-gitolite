@@ -1,0 +1,16 @@
+#   ____________________
+#  < Managed by Ansible >
+#   --------------------
+#          \   ^__^
+#           \  (oo)\_______
+#              (__)\       )\/\
+#                  ||----w |
+#                  ||     ||
+#
+
+[user]
+  name = {{ gitolite_gitconfig_user_name }}
+  email = {{ gitolite_gitconfig_user_email }}
+
+[push]
+  default = {{ gitolite_gitconfig_push_default }}
