@@ -90,6 +90,7 @@
     mode=0640
     owner={{ gitolite_user_name }}
     group={{ gitolite_user_group }}
+  notify: gitolite setup
 
 - name: install gitolite shell user list
   tags: gitolite
