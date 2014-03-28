@@ -5,4 +5,4 @@ gitolite_url: 'git://github.com/sitaramc/gitolite'
 gitolite_tag: 'v3.5.3.1'
 
 gitolite_httpd_ap_doc_root: '/var/www'
-gitolite_httpd_cgi_bin: {{ gitolite_httpd_ap_doc_root }}/cgi-bin
+gitolite_httpd_cgi_bin: "{{ gitolite_httpd_ap_doc_root }}/cgi-bin"
