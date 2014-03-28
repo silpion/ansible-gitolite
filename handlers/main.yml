@@ -5,7 +5,7 @@
   tags: [gitolite_admin, gitolite]
   sudo: yes
   sudo_user: "{{ gitolite_user_name }}"
-  command: git push
+  action: command git push
     chdir={{ gitolite_user_home }}/gitolite-admin
 
 
@@ -14,7 +14,7 @@
   tags: [gitolite_admin, gitolite]
   sudo: yes
   sudo_user: "{{ gitolite_user_name }}"
-  command: git commit -am 'Updated gitolite-admin by Ansible'
+  action: command git commit -am 'Updated gitolite-admin by Ansible'
     chdir={{ gitolite_user_home }}/gitolite-admin
   notify: git push gitolite-admin
 
@@ -24,7 +24,7 @@
   tags: [gitolite_admin, gitolite]
   sudo: yes
   sudo_user: "{{ gitolite_user_name }}"
-  command: git add .
+  action: command git add .
     chdir={{ gitolite_user_home }}/gitolite-admin
   notify: git commit gitolite-admin
 
@@ -34,7 +34,8 @@
   tags: gitolite
   sudo: yes
   sudo_user: "{{ gitolite_user_name }}"
-  command: "{{ gitolite_install_dir }}/gitolite setup"
+  action: command {{ gitolite_install_dir }}/gitolite setup
+    chdir={{ gitolite_user_home }}
 
 
 # httpd server
