@@ -1,0 +1,16 @@
+#!/bin/bash
+
+#   ____________________
+#  < Managed by Ansible >
+#   --------------------
+#          \   ^__^
+#           \  (oo)\_______
+#              (__)\       )\/\
+#                  ||----w |
+#                  ||     ||
+#
+
+export GIT_PROJECT_ROOT={{ gitolite_user_home }}/repositories
+export GITOLITE_HTTP_HOME={{ gitolite_user_home }}
+
+exec {{ gitolite_install_dir }}/gitolite-shell
