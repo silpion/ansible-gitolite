@@ -15,7 +15,7 @@
 - include: selinux.yml
   tags: gitolite
 
-- name: Install required packages
+- name: Install required packages for gitolite
   tags: gitolite
   action: "{{ ansible_pkg_mgr }} state=installed name={{ item }}"
   with_items: gitolite_package_list
@@ -58,7 +58,7 @@
 - name: install gitolite git configuration
   tags: gitolite
   template:
-    src=gitolite.gitconfig.j2
+    src=gitconfig.j2
     dest={{ gitolite_user_home }}/.gitconfig
     mode=0600
     owner={{ gitolite_user_name }}
@@ -66,7 +66,7 @@
 
 
 # setup gitolite
-- name: install directories for gitolite
+- name: install gitolite directories
   tags: gitolite
   file:
     state=directory
@@ -124,7 +124,8 @@
 # configure smart-https for gitolite
 - include: https.yml
   tags: gitolite
-  when: gitolite_http_enable
+  when: gitolite_https_enable
 
-#- include: admin.yml
-#  tags: [gitolite_admin, gitolite]
+#- include: repositories.yml
+#  tags: gitolite
+#  when: gitolite_repositories|count != 0
