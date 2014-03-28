@@ -15,17 +15,33 @@ gitolite_domainname: localdomain
 # gitolite service user git configuration
 gitolite_gitconfig_user_name: 'Git Service'
 gitolite_gitconfig_user_email: "{{ gitolite_user_name }}@{{ gitolite_hostname }}.{{ gitolite_domainname }}"
-gitolite_gitconfig_push_default: simple
+  # TODO [kusch] This shall get updated to 'simple' but requires git 1.9.1 Thu 27 Mar 2014 03:49:26 PM CET
+gitolite_gitconfig_push_default: current
 
 
 # gitolite service https configuration
+#   should https get enabled
 gitolite_https_enable: false
-gitolite_https_admin_user: git
-gitolite_https_admin_pass: ""
+#   https authentication type
+#   - basic
+#   - ldap (future)
+gitolite_https_auth_type: basic
+
 
 # configuration settings for the httpd daemon
 #   if gitolite_https_enable == true
 gitolite_httpd_document_root: /var/empty/www
+gitolite_httpd_https_port: 443
+gitolite_httpd_sitename: "{{ gitolite_hostname }}.{{ gitolite_domainname }}"
+
+
+# SSL
+#   SSL certificate for the httpd daemon
+#   generated if empty.
+gitolite_ssl_certificate: ""
+gitolite_ssl_certificate_key: ""
+#   used as -subj argument to openssl req when certificates are generated
+gitolite_ssl_certificate_subject: "/C=DE/ST=Hamburg/L=Hamburg/O=IT/CN={{ gitolite_httpd_sitename }}"
 
 
 # gitolite.rc
@@ -67,9 +83,9 @@ gitolite_gitoliterc_enable_features:
   - writable
   - ssh-authkeys
   - git-config
-  - daemon
-  - gitweb
 #    list of existing features disabled by default
+# - daemon
+# - gitweb
 # - create
 # - fork
 # - mirror
@@ -94,4 +110,7 @@ gitolite_gitoliterc_enable_features:
 
 
 #gitolite_repositories:
-#  - { repo: "gitolite-admin", admin: [{{ gitolite_user_name}}], rw: [], ro: [] }
+#  - { repo: "gitolite-admin", r: [], w: [], a: [{{ gitolite_user_name }}] }
+#  - { repo: "testing", r: [], w: [], a: [@all] }
+#
+#gitolite_repositories_custom: []
