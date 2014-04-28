@@ -1,0 +1,68 @@
+#   ____________________
+#  < Managed by Ansible >
+#   --------------------
+#          \   ^__^
+#           \  (oo)\_______
+#              (__)\       )\/\
+#                  ||----w |
+#                  ||     ||
+#
+{% macro gitolite_repo(r) -%}
+repo {{ r.repo }}
+{% if 'admin' in r and r['admin']|count > 0 -%}
+{% if 'users' in r['admin'] and r['admin']['users']|count > 0 -%}
+{% set perma = "  RW+ = " + r['admin']['users']|join(" ") -%}
+{%- endif %}
+{% if perma|count > 0 -%}
+{{ perma }}
+{%- endif %}
+{%- endif %}
+
+{% if 'write' in r and r['write']|count > 0 %}
+{% if 'options' in r['write'] and r['write']['options']|count > 0 and 'users' in r['write'] and r['write']['users']|count > 0 -%}
+{% set permw = "  RW " + r['write']['options']|join(" ") +  " = " + r['write']['users']|join(" ") -%}
+{% elif 'users' in r['write'] and r['write']['users']|count > 0 -%}
+{% set permw = "  RW = " + r['write']['users']|join(" ") -%}
+{% else -%}
+{% set permw = "" -%}
+{%- endif %}
+{% if permw|count > 0 -%}
+{{ permw }}
+{%- endif %}
+{%- endif %}
+
+{% if 'read' in r and r['read']|count > 0 -%}
+{% if 'options' in r['read'] and r['read']['options']|count > 0 and 'users' in r['read'] and r['read']['users']|count > 0 -%}
+{% set permr = "  R " + r['write']['options']|join(" ") +  " = " + r['write']['users']|join(" ") -%}
+{% elif 'users' in r['read'] and r['read']['users']|count > 0 -%}
+{% set permr = "  R = " + r['read']['users']|join(" ") -%}
+{% else -%}
+{% set permr = "" -%}
+{%- endif %}
+{% if permr|count > 0 -%}
+{{ permr }}
+{%- endif %}
+{%- endif %}
+{%- endmacro %}
+
+{% macro iter_repos(repositories) -%}
+{% for repo in repositories -%}
+{% for ace in ('admin', 'write', 'read') -%}
+{% if ace in repo -%}
+{% for arg in ('options', 'users') -%}
+{% if arg in repo[ace] -%}
+{% set create_repo = true -%}
+{%- endif %}
+{%- endfor %}
+{%- endif %}
+{%- endfor %}
+{% if create_repo -%}
+{{ gitolite_repo(repo) }}
+{%- endif %}
+{%- endfor %}
+{%- endmacro %}
+
+# Default repositories
+{{ iter_repos(gitolite_repositories) }}
+# Custom repositories
+{{ iter_repos(gitolite_repositories_custom) }}

@@ -8,6 +8,9 @@
 #                  ||     ||
 #
 
-{% for user in gitolite_gitoliterc_shell_user_list %}
-{{ user }}
-{% endfor %}
+[user]
+  name = {{ gitolite_gitconfig_user_name }}
+  email = {{ gitolite_gitconfig_user_email }}
+
+[push]
+  default = {{ gitolite_gitconfig_push_default }}

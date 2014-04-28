@@ -1,29 +1,16 @@
 ---
-
-# push changes in the repository to the remote
-- name: git push gitolite-admin
-  tags: [gitolite_admin, gitolite]
+# update gitolte configuration/setup
+- name: gitolite setup
+  tags: gitolite
   sudo: yes
   sudo_user: "{{ gitolite_user_name }}"
-  command: git push
-    chdir={{ gitolite_user_home }}/gitolite-admin
+  action: command {{ gitolite_install_dir }}/gitolite setup
+    chdir={{ gitolite_user_home }}
 
 
-# commit staged changes into the repository
-- name: git commit gitolite-admin
-  tags: [gitolite_admin, gitolite]
-  sudo: yes
-  sudo_user: "{{ gitolite_user_name }}"
-  command: git commit -am 'Updated gitolite-admin by Ansible'
-    chdir={{ gitolite_user_home }}/gitolite-admin
-  notify: git push gitolite-admin
-
-
-# add changes to the staging area
-- name: git add gitolite-admin
-  tags: [gitolite_admin, gitolite]
-  sudo: yes
-  sudo_user: "{{ gitolite_user_name }}"
-  command: git add .
-    chdir={{ gitolite_user_home }}/gitolite-admin
-  notify: git commit gitolite-admin
+# httpd server
+- name: service restart httpd
+  tags: gitolite_httpd
+  service:
+    state=restarted
+    name={{ gitolite_httpd_service }}

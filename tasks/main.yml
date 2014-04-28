@@ -15,22 +15,22 @@
 - include: selinux.yml
   tags: gitolite
 
-- name: Install required packages
+- name: Install required packages for gitolite
   tags: gitolite
-  action: "{{ ansible_pkg_mgr }} state=installed name={{ item }}"
   with_items: gitolite_package_list
+  action: "{{ ansible_pkg_mgr }} state=installed name={{ item }}"
 
 
 # create gitolite user and group
 #   group
-- name: create gitolite group
+- name: Create gitolite group
   tags: gitolite
   group:
     state=present
     name={{ gitolite_user_group }}
     system=yes
 #   user
-- name: create gitolite user
+- name: Create gitolite user
   tags: gitolite
   user:
     state=present
@@ -45,7 +45,7 @@
 
 
 # manage gitolite users' ssh configuration
-- name: install gitolite ssh configuration
+- name: Install gitolite ssh configuration
   tags: gitolite
   copy:
     src=ssh_config
@@ -54,19 +54,26 @@
     owner={{ gitolite_user_name }}
     group={{ gitolite_user_group }}
 
+# manage gitolite users' git configuration
+- name: Install gitolite git configuration
+  tags: gitolite
+  template:
+    src=gitconfig.j2
+    dest={{ gitolite_user_home }}/.gitconfig
+    mode=0600
+    owner={{ gitolite_user_name }}
+    group={{ gitolite_user_group }}
+
 
 # setup gitolite
-- name: install directories for gitolite
+- name: Install gitolite directory
   tags: gitolite
   file:
     state=directory
-    dest={{ item }}
+    dest={{ gitolite_install_dir }}
     mode=0755
     owner=root
     group=root
-  with_items:
-    - /usr/local/src/gitolite
-    - "{{ gitolite_install_dir }}"
 
 - name: git clone gitolite
   tags: gitolite
@@ -77,13 +84,14 @@
     remote=github
     dest=/usr/local/src/gitolite
 
-- name: install gitolite
+- name: Install gitolite
   tags: gitolite
   action: command /usr/local/src/gitolite/install -to {{ gitolite_install_dir }}
     creates={{ gitolite_install_dir }}/gitolite
 
-- name: install gitolite configuration
+- name: Install gitolite configuration
   tags: gitolite
+  notify: gitolite setup
   template:
     src=gitolite.rc.j2
     dest={{ gitolite_user_home }}/.gitolite.rc
@@ -91,17 +99,17 @@
     owner={{ gitolite_user_name }}
     group={{ gitolite_user_group }}
 
-- name: install gitolite shell user list
+- name: Install gitolite shell user list
   tags: gitolite
+  when: gitolite_gitoliterc_shell_user_list|count != 0
   template:
     src=gitolite.rc.shell_user.j2
     dest={{ gitolite_user_home }}/.gitolite.rc.shell_user
     mode=0640
     owner={{ gitolite_user_name }}
     group={{ gitolite_user_group }}
-  when: gitolite_gitoliterc_shell_user_list|count != 0
 
-- name: initialize gitolite
+- name: Initialize gitolite
   tags: gitolite
   sudo: yes
   sudo_user: "{{ gitolite_user_name }}"
@@ -110,5 +118,15 @@
     creates={{ gitolite_user_home }}/.gitolite
 
 
-#- include: admin.yml
-#  tags: [gitolite_admin, gitolite]
+# configure smart-https for gitolite
+#- include: https.yml
+#  tags: gitolite
+#  when: gitolite_https_enable
+
+
+# manage gitolite installation
+- include: admin.yml
+  tags: gitolite
+  when:
+    - gitolite_repositories|count != 0
+    - gitolite_repositories_custom|count != 0

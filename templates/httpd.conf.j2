@@ -1,0 +1,40 @@
+NameVirtualHost *:{{ gitolite_httpd_https_port }}
+
+<VirtualHost *:{{ gitolite_httpd_https_port }}>
+  ServerName {{ gitolite_httpd_sitename }}
+
+  ErrorLog {{ gitolite_httpd_logs }}/{{ gitolite_httpd_sitename }}.errors.log
+  CustomLog {{ gitolite_httpd_logs }}/{{ gitolite_httpd_sitename }}.access.log combined
+
+  SSLEngine on
+{% if gitolite_ssl_certificate != "" %}
+  SSLCertificateFile {{ gitolite_ssl_dir }}/certs/{{ gitolite_ssl_certificate }}
+{% else %}
+  SSLCertificateFile {{ gitolite_ssl_dir }}/certs/{{ gitolite_httpd_sitename }}.crt
+{% endif %}
+{% if gitolite_ssl_certificate_key != "" %}
+  SSLCertificateKeyFile {{ gitolite_ssl_dir }}/private/{{ gitolite_ssl_certificate_key }} 
+{% else %}
+  SSLCertificateKeyFile {{ gitolite_ssl_dir }}/private/{{ gitolite_httpd_sitename }}.key
+{% endif %}
+
+  DocumentRoot {{ gitolite_httpd_document_root }}
+  <Directory {{ gitolite_httpd_document_root }}>
+    Options none
+    AllowOverride none
+    Order allow,deny
+    Allow From All
+  </Directory>
+
+  SuexecUserGroup {{ gitolite_user_name }} {{ gitolite_user_group }}
+  ScriptAlias /git/ {{ gitolite_httpd_cgi_bin }}/gitolite-suexec-wrapper.sh/
+
+  <Location /git>
+{% if gitolite_https_auth_type|lower == 'basic' %}
+    AuthType Basic
+    AuthName "git - the stupid content tracker"
+    Require valid-user
+    AuthUserFile {{ gitolite_https_htaccess_file }}
+{% endif %}
+  </Location>
+</VirtualHost>
