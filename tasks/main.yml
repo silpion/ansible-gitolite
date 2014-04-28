@@ -119,9 +119,9 @@
 
 
 # configure smart-https for gitolite
-- include: https.yml
-  tags: gitolite
-  when: gitolite_https_enable
+#- include: https.yml
+#  tags: gitolite
+#  when: gitolite_https_enable
 
 
 # manage gitolite installation
