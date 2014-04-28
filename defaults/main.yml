@@ -109,6 +109,13 @@ gitolite_gitoliterc_enable_features:
 # - macros
 
 
+# gitolite repositories
+#   Repositories management will take place if both
+#   - gitolite_repositories
+#   - gitolite_repositories_custom
+#   are configured.
+
+# Default gitolite repositories
 gitolite_repositories:
   - repo: gitolite-admin
     admin:
@@ -123,4 +130,10 @@ gitolite_repositories:
     admin:
       users: ["@all"]
 
+# Custom gitolite repositories
 gitolite_repositories_custom: []
+
+
+# gitolite SSH user accounts
+#   SSH keys are read from gitolite/users/ssh/{{ item }}.pub pattern.
+gitolite_accounts_ssh: []
