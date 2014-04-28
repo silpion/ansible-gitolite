@@ -1,41 +1,42 @@
 ---
-- name: install required packages for smart https
+- name: Install required packages for smart https
   tags: gitolite
   action: "{{ ansible_pkg_mgr }} state=installed name={{ item }}"
   with_items: gitolite_package_list_https
 
-- name: add httpd service user to gitolite service group
+- name: Add httpd service user to gitolite service group
   tags: gitolite
+  notify: service restart httpd
   user:
     name={{ gitolite_httpd_user_name }}
     groups={{ gitolite_user_group }}
     append=true
-  notify: service restart httpd
 
 
 # SSL
-- name: install ssl certificate
+- name: Install SSL certificate
   tags: gitolite
+  when: gitolite_ssl_certificate != "" and gitolite_ssl_certificate_key != ""
   copy:
     src={{ gitolite_ssl_certificate }}
     dest={{ gitolite_ssl_dir }}/certs/{{ gitolite_ssl_certificate }}
     mode=0644
     owner=0
     group=0
-  when: gitolite_ssl_certificate != "" and gitolite_ssl_certificate_key != ""
 
-- name: install ssl certificate key
+- name: Install ssl certificate key
   tags: gitolite
+  when: gitolite_ssl_certificate_key != "" and gitolite_ssl_certificate != ""
   copy:
     src={{ gitolite_ssl_certificate_key }}
     dest={{ gitolite_ssl_dir }}/private/{{ gitolite_ssl_certificate_key }}
     mode=0640
     owner=0
     group=0
-  when: gitolite_ssl_certificate_key != "" and gitolite_ssl_certificate != ""
 
-- name: generate ssl certificate
+- name: Generate SSL certificate
   tags: gitolite
+  when: gitolite_ssl_certificate == "" or gitolite_ssl_certificate_key == ""
   command: openssl req
         -new
         -nodes
@@ -46,11 +47,10 @@
         -out {{ gitolite_ssl_dir }}/certs/{{ gitolite_httpd_sitename }}.crt
         -extensions v3_ca
       creates={{ gitolite_ssl_dir }}/certs/{{ gitolite_httpd_sitename }}.crt
-  when: gitolite_ssl_certificate == "" or gitolite_ssl_certificate_key == ""
 
 
 # httpd
-- name: install httpd document root directory
+- name: Install httpd document root directory
   tags: gitolite
   file:
     state=directory
@@ -59,7 +59,7 @@
     owner=0
     group=0
 
-- name: install httpd suexec directory
+- name: Install httpd suexec directory
   tags: gitolite
   file:
     state=directory
@@ -68,7 +68,7 @@
     owner={{ gitolite_user_name }}
     group={{ gitolite_user_group }}
 
-- name: install httpd suexec gitolite wrapper script
+- name: Install httpd suexec gitolite wrapper script
   tags: gitolite
   template:
     src=httpd-suexec-wrapper.sh.j2
@@ -77,17 +77,17 @@
     owner={{ gitolite_user_name }}
     group={{ gitolite_user_group }}
 
-- name: install httpd configuration
+- name: Install httpd configuration
   tags: gitolite
+  notify: service restart httpd
   template:
     src=httpd.conf.j2
     dest={{ gitolite_httpd_sites }}/{{ gitolite_httpd_sitename }}.conf
     mode=0644
     owner=0
     group=0
-  notify: service restart httpd
 
-- name: service enable httpd
+- name: Service enable httpd
   tags: gitolite
   service:
     state=started
