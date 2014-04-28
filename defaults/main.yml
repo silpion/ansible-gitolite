@@ -83,9 +83,9 @@ gitolite_gitoliterc_enable_features:
   - writable
   - ssh-authkeys
   - git-config
+  - daemon
+  - gitweb
 #    list of existing features disabled by default
-# - daemon
-# - gitweb
 # - create
 # - fork
 # - mirror
@@ -109,8 +109,18 @@ gitolite_gitoliterc_enable_features:
 # - macros
 
 
-#gitolite_repositories:
-#  - { repo: "gitolite-admin", r: [], w: [], a: [{{ gitolite_user_name }}] }
-#  - { repo: "testing", r: [], w: [], a: [@all] }
-#
-#gitolite_repositories_custom: []
+gitolite_repositories:
+  - repo: gitolite-admin
+    admin:
+      users: ["id_rsa", "{{ gitolite_user_name }}"]
+    write:
+      options: []
+      users: []
+    read:
+      options: []
+      users: []
+  - repo: testing
+    admin:
+      users: ["@all"]
+
+gitolite_repositories_custom: []
