@@ -1,29 +1,63 @@
 ---
+# TODO [kusch] git module has some serious bug with sudo_user Thu 24 Apr 2014 12:15:51 PM CEST
+# TODO [kusch] [#7125](https://github.com/ansible/ansible/issues/7125) Thu 24 Apr 2014 12:15:51 PM CEST
+#- name: git clone gitolite-admin
+#  tags: gitolite
+#  sudo: yes
+#  sudo_user: "{{ gitolite_user_name }}"
+#  git:
+#    force=yes
+#    accept_hostkey=yes
+#    repo={{ gitolite_user_name }}@localhost:gitolite-admin.git
+#    remote=origin
+#    dest={{ gitolite_user_home }}/gitolite-admin
 - name: git clone gitolite-admin
-  tags: [gitolite_admin, gitolite]
+  tags: gitolite
   sudo: yes
   sudo_user: "{{ gitolite_user_name }}"
-  git:
-    force=yes
-    repo={{ gitolite_user_home }}/repositories/gitolite-admin.git
-    remote=origin
-    dest={{ gitolite_user_home }}/gitolite-admin
+  register: gitolite_git_clone_gitolite_admin
+  command: git clone {{ gitolite_user_name }}@localhost:gitolite-admin.git
+    chdir={{ gitolite_user_home }}
+    creates={{ gitolite_user_home }}/gitolite-admin
+
+- name: Install gitolite.conf
+  tags: gitolite
+  register: gitolite_install_gitolite_conf
+  template:
+    src=gitolite.conf.j2
+    dest={{ gitolite_user_home }}/gitolite-admin/conf/gitolite.conf
+    mode=0640
+    owner={{ gitolite_user_name }}
+    group={{ gitolite_user_group }}
 
 
-# - name: install gitolite admin ssh keys
-#   tags: [gitolite_admin, gitolite]
-#   sudo: yes
-#   sudo_user: "{{ gitolite_user_name }}"
-# 
-# 
-# - name: configure gitolite-admin
-#   tags: [gitolite_admin, gitolite]
-#   sudo: yes
-#   sudo_user: "{{ gitolite_user_name }}"
-#   template:
-#     src=gitolite.conf.j2
-#     dest={{ gitolite_user_home }}/gitolite-admin/conf/gitolite.conf
-#     mode=0644
-#     owner={{ gitolite_user_name }}
-#     group={{ gitolite_user_group }}
-#   register: gitolite_conf
+# Manage changes inside the gitolite-admin repository
+
+#   stage changes
+- name: git add gitolite-admin
+  tags: gitolite
+  when: gitolite_install_gitolite_conf|changed
+  register: gitolite_git_add_gitolite_admin
+  sudo: yes
+  sudo_user: "{{ gitolite_user_name }}"
+  command: git add --all
+    chdir={{ gitolite_user_home }}/gitolite-admin
+
+#   commit changes
+- name: git commit gitolite-admin
+  tags: gitolite
+  when: gitolite_git_add_gitolite_admin|changed
+  register: gitolite_git_commit_gitolite_admin
+  sudo: yes
+  sudo_user: "{{ gitolite_user_name }}"
+  command: git commit -m 'Updated gitolite-admin by Ansible'
+    chdir={{ gitolite_user_home }}/gitolite-admin
+
+#   push changes
+- name: git push gitolite-admin
+  tags: gitolite
+  when: gitolite_git_commit_gitolite_admin|changed
+  sudo: yes
+  sudo_user: "{{ gitolite_user_name }}"
+  command: git push --set-upstream origin master
+    chdir={{ gitolite_user_home }}/gitolite-admin
