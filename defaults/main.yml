@@ -19,31 +19,6 @@ gitolite_gitconfig_user_email: "{{ gitolite_user_name }}@{{ gitolite_hostname }}
 gitolite_gitconfig_push_default: current
 
 
-# gitolite service https configuration
-#   should https get enabled
-gitolite_https_enable: false
-#   https authentication type
-#   - basic
-#   - ldap (future)
-gitolite_https_auth_type: basic
-
-
-# configuration settings for the httpd daemon
-#   if gitolite_https_enable == true
-gitolite_httpd_document_root: /var/empty/www
-gitolite_httpd_https_port: 443
-gitolite_httpd_sitename: "{{ gitolite_hostname }}.{{ gitolite_domainname }}"
-
-
-# SSL
-#   SSL certificate for the httpd daemon
-#   generated if empty.
-gitolite_ssl_certificate: ""
-gitolite_ssl_certificate_key: ""
-#   used as -subj argument to openssl req when certificates are generated
-gitolite_ssl_certificate_subject: "/C=DE/ST=Hamburg/L=Hamburg/O=IT/CN={{ gitolite_httpd_sitename }}"
-
-
 # gitolite.rc
 #   default umask for gitolite to create files and directories
 gitolite_gitoliterc_umask: '0027'
@@ -135,5 +110,32 @@ gitolite_repositories_custom: []
 
 
 # gitolite SSH user accounts
-#   SSH keys are read from gitolite/users/ssh/{{ item }}.pub pattern.
+#   SSH keys are read from
+#     files/gitolite/users/ssh/{{ item }}.pub
+#   pattern.
 gitolite_accounts_ssh: []
+
+
+# gitolite service https configuration
+#   should https get enabled
+gitolite_https_enable: false
+#   https authentication type
+#   - basic
+#   - ldap (future)
+gitolite_https_auth_type: basic
+
+
+# configuration settings for the httpd daemon
+#   if gitolite_https_enable == true
+gitolite_httpd_document_root: /var/empty/www
+gitolite_httpd_https_port: 443
+gitolite_httpd_sitename: "{{ gitolite_hostname }}.{{ gitolite_domainname }}"
+
+
+# SSL
+#   SSL certificate for the httpd daemon
+#   generated if empty.
+gitolite_ssl_certificate: ""
+gitolite_ssl_certificate_key: ""
+#   used as -subj argument to openssl req when certificates are generated
+gitolite_ssl_certificate_subject: "/C=DE/ST=Hamburg/L=Hamburg/O=IT/CN={{ gitolite_httpd_sitename }}"
