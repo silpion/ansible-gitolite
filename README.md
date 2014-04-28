@@ -1,13 +1,6 @@
 # ansible-gitolite
 
-This role installs gitolite from upstream Git repository.
-
-# TODO
-
-* Basic gitolite-admin repository management (admin.yml)
-  * Allow passing repositories including access control.
-  * Allow dynamic installation of SSH keys/gitolite users.
-  * Generate gitolite configuration based on data.
+This role installs and configures gitolite from upstream Git repository.
 
 
 # Requirements
