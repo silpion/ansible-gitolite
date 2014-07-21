@@ -3,14 +3,19 @@
 This role installs and configures gitolite from upstream Git repository.
 
 
-# Requirements
+## Requirements
 
 None.
 
 
-# Role variables
+## Dependencies
 
-## System related configuration
+None.
+
+
+## Role variables
+
+### System related configuration
 
 * ``gitolite_user_group``: Configure the name of the group for the gitolite service user (default: ``git``)
 * ``gitolite_user_name``: Configure the name of the gitolite service user (default: ``git``)
@@ -19,13 +24,13 @@ None.
 * ``gitolite_hostname``: Configure the gitolite server hostname (default: ``localhost``)
 * ``gitolite_domainname``: Configure the gitolite server domainname (default: ``localdomain``)
 
-## ~/.gitconfig related configuration
+### ~/.gitconfig related configuration
 
 * ``gitolite_gitconfig_user_name``: Gitolite service user .gitconfig: Configure a user name for git config user.name (default: ``Git Service``)
 * ``gitolite_gitconfig_user_email``: Gitolite service user .gitconfig: Configure a user email for git config user.email (default: ``{{ gitolite_user_name }}@{{ gitolite_hostname }}.{{ gitolite_domainname }}``)
 * ``gitolite_gitconfig_push_default`` Gitolite service user .gitconfig: Configure default for git push (default: ``current``) **Should** get updated to *simple* (requires Git 1.9).
 
-## gitolite.rc configuration
+### gitolite.rc configuration
 
 * ``gitolite_gitoliterc_umask``: Configure gitolite.rc, UMASK option (default: ``0027``)
 * ``gitolite_gitoliterc_git_config_keys``: Configure gitolite.rc, GIT_CONFIG_KEYS option (default: "")
@@ -39,7 +44,7 @@ None.
 * ``gitolite_gitoliterc_roles``: Configure gitolite.rc, ROLES option (default: ``["READERS", "WRITERS"]``)
 * ``gitolite_gitoliterc_enable_features``: Configure gitolite.rc, ENABLE option (default: ``["help", "desc", "info", "perms", "writable", "ssh-authkeys", "git-config", "daemon", "gitweb"]``)
 
-## gitolite.conf configuration
+### gitolite.conf configuration
 
 * ``gitolite_repositories``: Configure default repositories from gitolite (gitolite-admin/conf/gitolite.conf).
 
@@ -60,7 +65,7 @@ least allow admin access to an SSH user in ``gitolite_accounts_ssh`` array.
 * ``gitolite_repositories_custom``: Allows to create custom repositories. gitolite will NOT get configured if not BOTH ``gitolite_repositories`` and ``gitolite_repositories_custom`` are configured. Data structure is identical to ``gitolite_repositories``.
 * ``gitolite_accounts_ssh``: List of SSH public keys to be added to gitolite-admin/keydir/. SSH keys are read from files/gitolite/users/ssh/*.pub relative to the playbooks top level directory (default: ``[]``)
 
-## https related configuration
+### https related configuration
 
 https support is very basic and not feature complete. It's not possible
 to configure usable authentication providers with Apache right now, so
@@ -76,7 +81,7 @@ it's completely commented out. The following variables are **not implemented yet
 * ``gitolite_ssl_certificate_subject``: If a SSL certificate gets generated this is the string for the OpenSSL '-subj' switch (default: ``/C=DE/ST=Hamburg/L=Hamburg/O=IT/CN={{ gitolite_httpd_sitename }}``)
 
 
-# Example playbook
+## Example playbook
 
     # using the defaults
     ---
