@@ -23,9 +23,7 @@ None.
 
 * ``gitolite_gitconfig_user_name``: Gitolite service user .gitconfig: Configure a user name for git config user.name (default: ``Git Service``)
 * ``gitolite_gitconfig_user_email``: Gitolite service user .gitconfig: Configure a user email for git config user.email (default: ``{{ gitolite_user_name }}@{{ gitolite_hostname }}.{{ gitolite_domainname }}``)
-* ``gitolite_gitconfig_push_default`` Gitolite service user .gitconfig: Configure default for git push (default: ``current``)
-
-``gitolite_gitconfig_push_default`` should get updated to ``simple`` which requires git 1.9 to be installed.
+* ``gitolite_gitconfig_push_default`` Gitolite service user .gitconfig: Configure default for git push (default: ``current``) **Should** get updated to *simple* (requires Git 1.9).
 
 ## gitolite.rc configuration
 
