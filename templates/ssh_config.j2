@@ -1,0 +1,12 @@
+Host localhost
+  HashKnownHosts no
+  UserKnownHostsFile /dev/null
+  StrictHostKeyChecking no
+  GSSAPIAuthentication no
+  PasswordAuthentication no
+
+{% if gitolite_mirroring_peers %}
+Host {{ gitolite_mirroring_peers|join(' ') }}
+  IdentityFile {{ gitolite_user_home }}/.ssh/server-{{ gitolite_gitoliterc_hostname }}
+  StrictHostKeyChecking no
+{% endif %}
