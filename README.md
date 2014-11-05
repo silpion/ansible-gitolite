@@ -23,6 +23,7 @@ None.
 * ``gitolite_install_dir``: Configure the installation directory of gitolite (default: ``/usr/local/gitolite``)
 * ``gitolite_hostname``: Configure the gitolite server hostname (default: ``localhost``)
 * ``gitolite_domainname``: Configure the gitolite server domainname (default: ``localdomain``)
+* ``gitolite_mirroring_peers``: Configure ssh aliases for mirroring (default: ``[]``)
 
 ### ~/.gitconfig related configuration
 
