@@ -83,6 +83,7 @@
     version={{ gitolite_tag }}
     remote=github
     dest=/usr/local/src/gitolite
+    accept_hostkey="yes"
 
 - name: Install gitolite
   tags: gitolite
