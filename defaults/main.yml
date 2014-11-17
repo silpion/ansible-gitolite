@@ -115,6 +115,8 @@ gitolite_repositories_custom: []
 #   pattern.
 gitolite_accounts_ssh: []
 
+# gitolite mirroring
+gitolite_mirroring_peers: []
 
 # gitolite service https configuration
 #   should https get enabled

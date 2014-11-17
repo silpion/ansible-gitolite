@@ -1,25 +1,14 @@
 ---
-# TODO [kusch] git module has some serious bug with sudo_user Thu 24 Apr 2014 12:15:51 PM CEST
-# TODO [kusch] [#7125](https://github.com/ansible/ansible/issues/7125) Thu 24 Apr 2014 12:15:51 PM CEST
-#- name: git clone gitolite-admin
-#  tags: gitolite
-#  sudo: yes
-#  sudo_user: "{{ gitolite_user_name }}"
-#  git:
-#    force=yes
-#    accept_hostkey=yes
-#    repo={{ gitolite_user_name }}@localhost:gitolite-admin.git
-#    remote=origin
-#    dest={{ gitolite_user_home }}/gitolite-admin
 - name: git clone gitolite-admin
   tags: gitolite
   sudo: yes
   sudo_user: "{{ gitolite_user_name }}"
-  register: gitolite_git_clone_gitolite_admin
-  command: git clone {{ gitolite_user_name }}@localhost:gitolite-admin.git
-    chdir={{ gitolite_user_home }}
-    creates={{ gitolite_user_home }}/gitolite-admin
-
+  git:
+    force=yes
+    accept_hostkey=yes
+    repo={{ gitolite_user_name }}@localhost:gitolite-admin.git
+    remote=origin
+    dest={{ gitolite_user_home }}/gitolite-admin
 
 # Install a gitolite repositories configuration file "gitolite.conf"
 - name: Install gitolite.conf

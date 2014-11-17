@@ -47,8 +47,8 @@
 # manage gitolite users' ssh configuration
 - name: Install gitolite ssh configuration
   tags: gitolite
-  copy:
-    src=ssh_config
+  template:
+    src=ssh_config.j2
     dest={{ gitolite_user_home }}/.ssh/config
     mode=0600
     owner={{ gitolite_user_name }}
