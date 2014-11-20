@@ -44,6 +44,14 @@
 {% endfor %}
   },
 
+{% if gitolite_gitoliterc_local_code != '' %}
+  LOCAL_CODE => '{{ gitolite_gitoliterc_local_code }}',
+{%- endif %}
+
+{% for trigger, scripts in gitolite_gitoliterc_triggers.iteritems() %}{% if scripts|count > 0 %}
+  {{ trigger|upper }} => ['{{ scripts|join("', '") }}'],
+{% endif %}{% endfor %}
+
   ENABLE => [
 {% for feature in gitolite_gitoliterc_enable_features %}
     '{{ feature }}',

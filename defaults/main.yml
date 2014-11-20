@@ -49,6 +49,12 @@ gitolite_gitoliterc_shell_user_list: []
 #   gitolite roles.
 gitolite_gitoliterc_roles: ['READERS', 'WRITERS']
 
+#   gitolite LOCAL CODE
+gitolite_gitoliterc_local_code: ''
+
+#   gitolite custom triggers
+gitolite_gitoliterc_triggers: {}
+
 #   features to enable
 gitolite_gitoliterc_enable_features:
   - help

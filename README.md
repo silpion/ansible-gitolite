@@ -23,6 +23,7 @@ None.
 * ``gitolite_install_dir``: Configure the installation directory of gitolite (default: ``/usr/local/gitolite``)
 * ``gitolite_hostname``: Configure the gitolite server hostname (default: ``localhost``)
 * ``gitolite_domainname``: Configure the gitolite server domainname (default: ``localdomain``)
+* ``gitolite_mirroring_peers``: Configure ssh aliases for mirroring (default: ``[]``)
 
 ### ~/.gitconfig related configuration
 
@@ -43,6 +44,8 @@ None.
 * ``gitolite_gitoliterc_shell_user_list``: Configure gitolite.rc, SHELL_USER_LIST option (default: ``[]``)
 * ``gitolite_gitoliterc_roles``: Configure gitolite.rc, ROLES option (default: ``["READERS", "WRITERS"]``)
 * ``gitolite_gitoliterc_enable_features``: Configure gitolite.rc, ENABLE option (default: ``["help", "desc", "info", "perms", "writable", "ssh-authkeys", "git-config", "daemon", "gitweb"]``)
+* ``gitolite_gitoliterc_local_code``: Configure gitolite.rc, LOCAL_CODE option (default: "")
+* ``gitolite_gitoliterc_triggers``: Configure gitolite.rc triggers (default: {}). Must be a dictionary of lists, with key name as trigger (eg. ``{post_compile: ['my-custom-post-compile']}``)
 
 ### gitolite.conf configuration
 
