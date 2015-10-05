@@ -1,4 +1,7 @@
 ---
+# lookup role version
+gitolite_role_version: "{{ lookup('file', role_path + '/VERSION') }}"
+
 gitolite_url: 'git://github.com/sitaramc/gitolite'
 gitolite_tag: 'v3.6.1'
 
