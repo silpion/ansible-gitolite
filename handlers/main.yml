@@ -2,8 +2,8 @@
 # update gitolte configuration/setup
 - name: gitolite setup
   tags: gitolite
-  sudo: yes
-  sudo_user: "{{ gitolite_user_name }}"
+  become: true
+  become_user: "{{ gitolite_user_name }}"
   action: command {{ gitolite_install_dir }}/gitolite setup
     chdir={{ gitolite_user_home }}
 

@@ -2,8 +2,6 @@
 gitolite_package_list:
   - git
   - perl
-gitolite_package_list_selinux:
-  - python-selinux
 gitolite_package_list_https:
   - apache2
   - openssl

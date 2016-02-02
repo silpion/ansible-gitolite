@@ -13,6 +13,8 @@
 # Install a gitolite repositories configuration file "gitolite.conf"
 - name: Install gitolite.conf
   tags: gitolite
+  become: true
+  become_user: "{{ gitolite_user_name }}"
   register: gitolite_install_gitolite_conf
   template:
     src: gitolite.conf.j2
@@ -24,6 +26,8 @@
 # Install gitolite user accounts for git+ssh
 - name: Install gitolite SSH user accounts
   tags: gitolite
+  become: true
+  become_user: "{{ gitolite_user_name }}"
   register: gitolite_install_gitolite_ssh_user_accounts
   with_items: gitolite_accounts_ssh
   copy:
@@ -38,21 +42,21 @@
 #   stage changes
 - name: git add gitolite-admin
   tags: gitolite
-  when: gitolite_install_gitolite_conf.changed or gitolite_install_gitolite_ssh_user_accounts.changed
-  register: gitolite_git_add_gitolite_admin
   become: true
   become_user: "{{ gitolite_user_name }}"
+  when: gitolite_install_gitolite_conf.changed or gitolite_install_gitolite_ssh_user_accounts.changed
+  register: gitolite_git_add_gitolite_admin
   command: git add --all
   args:
     chdir: "{{ gitolite_user_home }}/gitolite-admin"
 
 #   commit changes
 - name: git commit gitolite-admin
+  become: true
+  become_user: "{{ gitolite_user_name }}"
   tags: gitolite
   when: gitolite_git_add_gitolite_admin.changed
   register: gitolite_git_commit_gitolite_admin
-  become: true
-  become_user: "{{ gitolite_user_name }}"
   command: git commit -m 'Updated gitolite-admin by Ansible'
   args:
     chdir: "{{ gitolite_user_home }}/gitolite-admin"
@@ -60,9 +64,9 @@
 #   push changes
 - name: git push gitolite-admin
   tags: gitolite
-  when: gitolite_git_commit_gitolite_admin.changed
   become: true
   become_user: "{{ gitolite_user_name }}"
+  when: gitolite_git_commit_gitolite_admin.changed
   command: git push --set-upstream origin master
   args:
     chdir: "{{ gitolite_user_home }}/gitolite-admin"

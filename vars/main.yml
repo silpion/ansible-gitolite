@@ -1,7 +1,4 @@
 ---
-# lookup role version
-gitolite_role_version: "{{ lookup('file', role_path + '/VERSION') }}"
-
 gitolite_url: 'git://github.com/sitaramc/gitolite'
 gitolite_tag: 'v3.6.1'
 
@@ -11,3 +8,6 @@ gitolite_httpd_cgi_bin: "{{ gitolite_httpd_ap_doc_root }}/cgi-bin"
 gitolite_supported_platform:
   - Debian
   - RedHat
+
+# lookup role version
+gitolite_role_version: "{{ lookup('file', role_path + '/VERSION') }}"

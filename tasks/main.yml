@@ -12,12 +12,10 @@
   tags: gitolite
   include_vars: "{{ ansible_os_family }}.yml"
 
-# manage SELinux
-- include: selinux.yml
-  tags: gitolite
 
 - name: Install required packages for gitolite
   tags: gitolite
+  become: true
   with_items: gitolite_package_list
   action: "{{ ansible_pkg_mgr }}"
   args:
@@ -29,17 +27,21 @@
 #   group
 - name: Create gitolite group
   tags: gitolite
+  become: true
   group:
     state: present
     system: true
     name: "{{ gitolite_user_group }}"
 #   user
+#
+
 - name: Create gitolite user
   tags: gitolite
+  become: true
   user:
     state: present
-    createhome: true
     generate_ssh_key: true
+    createhome: true
     ssh_key_bits: 4096
     ssh_key_type: rsa
     ssh_key_comment: "Gitolite Service"
@@ -48,9 +50,24 @@
     group: "{{ gitolite_user_group }}"
 
 
+- name: Fix Selinux home directory
+  tags: gitolite
+  become: true
+  with_items:
+    - { path: "{{ gitolite_user_home }}", setype: user_home_t }
+    - { path: "{{ gitolite_user_home }}/.ssh", setype: ssh_home_t }
+  file:
+    state: directory
+    path: "{{ item.path }}"
+    setype: "{{ item.setype }}"
+    owner: "{{ gitolite_user_name }}"
+    group: "{{ gitolite_user_group }}"
+
+
 # manage gitolite users' ssh configuration
 - name: Install gitolite ssh configuration
   tags: gitolite
+  become: true
   template:
     src: ssh_config.j2
     dest: "{{ gitolite_user_home }}/.ssh/config"
@@ -61,6 +78,7 @@
 # manage gitolite users' git configuration
 - name: Install gitolite git configuration
   tags: gitolite
+  become: true
   template:
     src: gitconfig.j2
     dest: "{{ gitolite_user_home }}/.gitconfig"
@@ -72,6 +90,7 @@
 # setup gitolite
 - name: Install gitolite directory
   tags: gitolite
+  become: true
   file:
     state: directory
     dest: "{{ gitolite_install_dir }}"
@@ -81,6 +100,7 @@
 
 - name: git clone gitolite
   tags: gitolite
+  become: true
   git:
     force: true
     repo: "{{ gitolite_url }}"
@@ -91,12 +111,14 @@
 
 - name: Install gitolite
   tags: gitolite
-  command: /usr/local/src/gitolite/install-to {{ gitolite_install_dir }}
+  become: true
+  command: /usr/local/src/gitolite/install -to {{ gitolite_install_dir }}
   args:
     creates: "{{ gitolite_install_dir }}/gitolite"
 
 - name: Install gitolite configuration
   tags: gitolite
+  become: true
   notify: gitolite setup
   template:
     src: gitolite.rc.j2
@@ -107,6 +129,7 @@
 
 - name: Install gitolite shell user list
   tags: gitolite
+  become: true
   when: gitolite_gitoliterc_shell_user_list|count != 0
   template:
     src: gitolite.rc.shell_user.j2
