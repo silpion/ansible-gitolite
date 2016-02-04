@@ -50,7 +50,7 @@
     group: "{{ gitolite_user_group }}"
 
 
-- name: Fix Selinux home directory
+- name: Fix SELinux home directory
   tags: gitolite
   become: true
   with_items:
