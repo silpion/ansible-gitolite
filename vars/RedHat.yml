@@ -3,8 +3,7 @@ gitolite_package_list:
   - git
   - perl
   - perl-Time-HiRes
-gitolite_package_list_selinux:
-  - libselinux-python
+  - perl-Data-Dumper
 gitolite_package_list_https:
   - httpd
   - mod_ssl

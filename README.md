@@ -10,8 +10,15 @@ None.
 
 ## Dependencies
 
-None.
+This role depends on [groover.util](https://github.com/silpion/ansible-util)
+role. This is configured for ``ansible-galaxy install`` in **requirements.yml**.
 
+**NOTE**: Requirements are installed as virtual user ``silpion``
+(``silpion.util``).
+
+Be sure to install required roles with
+
+    ansible-galaxy install --role-file requirements.yml
 
 ## Role variables
 
