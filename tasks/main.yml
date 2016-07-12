@@ -16,7 +16,7 @@
 - name: Install required packages for gitolite
   tags: gitolite
   become: true
-  with_items: gitolite_package_list
+  with_items: '{{ gitolite_package_list }}'
   action: "{{ ansible_pkg_mgr }}"
   args:
     state: installed
