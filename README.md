@@ -31,6 +31,7 @@ This role installs and configures gitolite from upstream Git repository.
 ### System related configuration
 
 * `gitolite_version`: Gitolite version to clone from gith (string, default: `v3.6.3`)
+* `gitolite_clone_url`: Git URL where to clone gitolite sources from (string, default: `git://github.com/sitaramc/gitolite`)
 * `gitolite_user_group`: Configure the name of the group for the gitolite service user (string, default: `git`)
 * `gitolite_user_name`: Configure the name of the gitolite service user (string, default: `git`)
 * `gitolite_user_home`: Configure the home (and service) directory for the gitolite service (string, default: `/srv/git`)
