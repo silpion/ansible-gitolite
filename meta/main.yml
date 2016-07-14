@@ -3,7 +3,8 @@
 #   Dependencies are pulled into the play and executed in order
 #   of appearance.
 dependencies:
-  - { role: silpion.util }
+  - src: https://github.com/silpion/ansible-util
+    name: silpion.util
 
 
 # https://galaxy.ansibleworks.com
@@ -14,7 +15,7 @@ galaxy_info:
   description: Install gitolite from upstream Git
   company: http://silpion.de
   license: Apache 2
-  min_ansible_version: 2.0
+  min_ansible_version: 2.1
 
   #
   # Below are all platforms currently available. Just uncomment
