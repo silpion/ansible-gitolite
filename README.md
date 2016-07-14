@@ -39,6 +39,7 @@ This role installs and configures gitolite from upstream Git repository.
 * `gitolite_hostname`: Configure the gitolite server hostname (string, default: `localhost`)
 * `gitolite_domainname`: Configure the gitolite server domainname (string, default: `localdomain`)
 * `gitolite_mirroring_peers`: Configure ssh aliases for mirroring (list, default: `[]`)
+* `gitolite_template_use_cow`: Whether to use a cow in templates rather than `ansible_managed` (boolean, default: `{{ util_template_use_cow|default(true) }}` -> `true`)
 
 ### ~/.gitconfig related configuration
 

@@ -2,6 +2,8 @@
 gitolite_version: 'v3.6.3'
 gitolite_clone_url: 'git://github.com/sitaramc/gitolite'
 
+gitolite_template_use_cow: '{{ util_template_use_cow|default(true) }}'
+
 # gitolite service user
 gitolite_user_group: git
 gitolite_user_name: git

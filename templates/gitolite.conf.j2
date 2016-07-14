@@ -1,3 +1,4 @@
+{% if gitolite_template_use_cow %}
 #   ____________________
 #  < Managed by Ansible >
 #   --------------------
@@ -7,6 +8,10 @@
 #                  ||----w |
 #                  ||     ||
 #
+{% else %}
+{{ ansible_managed|comment }}
+{% endif %}
+
 {% macro gitolite_repo(r) -%}
 repo {{ r.repo }}
 {% if 'admin' in r and r['admin']|count > 0 -%}

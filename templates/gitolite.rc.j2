@@ -1,3 +1,4 @@
+{% if gitolite_template_use_cow %}
 #   ____________________
 #  < Managed by Ansible >
 #   --------------------
@@ -7,6 +8,9 @@
 #                  ||----w |
 #                  ||     ||
 #
+{% else %}
+{{ ansible_managed|comment }}
+{% endif %}
 
 %RC = (
   UMASK => {{ gitolite_gitoliterc_umask }},
