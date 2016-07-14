@@ -1,8 +1,8 @@
----
+-#--
 - name: Install required packages for smart https
   tags: gitolite
   action: "{{ ansible_pkg_mgr }} state=installed name={{ item }}"
-  with_items: gitolite_package_list_https
+  with_items: '{{ gitolite_package_list_https }}'
 
 - name: Add httpd service user to gitolite service group
   tags: gitolite
