@@ -4,7 +4,7 @@
   tags: gitolite
   become: true
   become_user: '{{ gitolite_user_name }}'
-  when: '{{ not gitolite_fact_initial_checkmode }}'
+  when: '{{ not gitolite_fact_initial_checkmode|default(false) }}'
   action: command {{ gitolite_install_dir }}/gitolite setup
   args:
     chdir: '{{ gitolite_user_home }}'

@@ -108,7 +108,7 @@
 - name: git clone gitolite
   tags: gitolite
   become: true
-  when: '{{ not gitolite_fact_initial_checkmode }}'
+  when: '{{ not gitolite_fact_initial_checkmode|default(false) }}'
   git:
     force: true
     repo: '{{ gitolite_clone_url }}'
@@ -120,7 +120,7 @@
 - name: Install gitolite
   tags: gitolite
   become: true
-  when: '{{ not gitolite_fact_initial_checkmode }}'
+  when: '{{ not gitolite_fact_initial_checkmode|default(false) }}'
   command: /usr/local/src/gitolite/install -to {{ gitolite_install_dir }}
   args:
     creates: '{{ gitolite_install_dir }}/gitolite'
@@ -151,7 +151,7 @@
   tags: gitolite
   become: true
   become_user: '{{ gitolite_user_name }}'
-  when: '{{ not gitolite_fact_initial_checkmode }}'
+  when: '{{ not gitolite_fact_initial_checkmode|default(false) }}'
   command: '{{ gitolite_install_dir }}/gitolite setup -pk {{ gitolite_user_home }}/.ssh/id_rsa.pub'
   args:
     chdir: '{{ gitolite_user_home }}'
