@@ -75,21 +75,6 @@ least allow admin access to an SSH user in ``gitolite_accounts_ssh`` array.
 * ``gitolite_repositories_custom``: Allows to create custom repositories. gitolite will NOT get configured if not BOTH ``gitolite_repositories`` and ``gitolite_repositories_custom`` are configured. Data structure is identical to ``gitolite_repositories``.
 * ``gitolite_accounts_ssh``: List of SSH public keys to be added to gitolite-admin/keydir/. SSH keys are read from files/gitolite/users/ssh/*.pub relative to the playbooks top level directory (default: ``[]``)
 
-### https related configuration
-
-https support is very basic and not feature complete. It's not possible
-to configure usable authentication providers with Apache right now, so
-it's completely commented out. The following variables are **not implemented yet**.
-
-* ``gitolite_https_enable``: Enable configuraton of smart https with Apache (default: ``false``)
-* ``gitolite_https_auth_type``: Configures Auth Type for Apache httpd (default: ``basic``)
-* ``gitolite_httpd_document_root``: Configures the Apache httpd DocumentRoot directive (default: ``/var/empty/www``)
-* ``gitolite_httpd_https_port``: Configure the HTTPS port used from Apache httpd (default: ``443``)
-* ``gitolite_httpd_sitename``: Configure the ServerName directive for Apache httpd (default: ``{{ gitolite_hostname }}.{{ gitolite_domainname }}``)
-* ``gitolite_ssl_certificate``: Configure a sites SSL certificate for Apache httpd. A certificate will get created if generated string (default: "")
-* ``gitolite_ssl_certificate_key``: Configure a sites SSL certificates private key for Apache httpd. A certificate and key will get generated if empty string (default: "")
-* ``gitolite_ssl_certificate_subject``: If a SSL certificate gets generated this is the string for the OpenSSL '-subj' switch (default: ``/C=DE/ST=Hamburg/L=Hamburg/O=IT/CN={{ gitolite_httpd_sitename }}``)
-
 
 ## Example playbook
 
