@@ -3,6 +3,7 @@
   tags: gitolite
   become: true
   become_user: '{{ gitolite_user_name }}'
+  when: '{{ not gitolite_fact_initial_checkmode }}'
   git:
     force: true
     accept_hostkey: true
@@ -15,6 +16,7 @@
   tags: gitolite
   become: true
   become_user: '{{ gitolite_user_name }}'
+  when: '{{ not gitolite_fact_initial_checkmode }}'
   register: gitolite_install_gitolite_conf
   template:
     src: gitolite.conf.j2
@@ -28,6 +30,7 @@
   tags: gitolite
   become: true
   become_user: '{{ gitolite_user_name }}'
+  when: '{{ not gitolite_fact_initial_checkmode }}'
   register: gitolite_install_gitolite_ssh_user_accounts
   with_items: '{{ gitolite_accounts_ssh }}'
   copy:
@@ -44,7 +47,9 @@
   tags: gitolite
   become: true
   become_user: '{{ gitolite_user_name }}'
-  when: '{{ gitolite_install_gitolite_conf.changed or gitolite_install_gitolite_ssh_user_accounts.changed }}'
+  when:
+    - '{{ not gitolite_fact_initial_checkmode }}'
+    - '{{ gitolite_install_gitolite_conf.changed or gitolite_install_gitolite_ssh_user_accounts.changed }}'
   register: gitolite_git_add_gitolite_admin
   command: git add --all
   args:
@@ -55,7 +60,9 @@
   tags: gitolite
   become: true
   become_user: '{{ gitolite_user_name }}'
-  when: '{{ gitolite_git_add_gitolite_admin.changed }}'
+  when:
+    - '{{ not gitolite_fact_initial_checkmode }}'
+    - '{{ gitolite_git_add_gitolite_admin.changed }}'
   register: gitolite_git_commit_gitolite_admin
   command: git commit -m 'Updated gitolite-admin by Ansible'
   args:
@@ -66,7 +73,9 @@
   tags: gitolite
   become: true
   become_user: '{{ gitolite_user_name }}'
-  when: gitolite_git_commit_gitolite_admin.changed
+  when:
+    - '{{ not gitolite_fact_initial_checkmode }}'
+    - '{{ gitolite_git_commit_gitolite_admin.changed }}'
   command: git push --set-upstream origin master
   args:
     chdir: '{{ gitolite_user_home }}/gitolite-admin'

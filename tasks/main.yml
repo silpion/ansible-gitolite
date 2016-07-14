@@ -6,6 +6,14 @@
     that:
       - ansible_os_family in gitolite_supported_platform
 
+- name: Detect initial --check mode
+  tags: gitolite
+  when:
+    - '{{ ansible_check_mode }}'
+    - '{{ (ansible_local|default({})).gitolite is not defined }}'
+  set_fact:
+    gitolite_fact_initial_checkmode: true
+
 
 # manage installation of required packages
 - name: Include platform specific vars
@@ -100,10 +108,11 @@
 - name: git clone gitolite
   tags: gitolite
   become: true
+  when: '{{ not gitolite_fact_initial_checkmode }}'
   git:
     force: true
-    repo: '{{ gitolite_url }}'
-    version: '{{ gitolite_tag }}'
+    repo: '{{ gitolite_clone_url }}'
+    version: '{{ gitolite_version }}'
     remote: github
     dest: /usr/local/src/gitolite
     accept_hostkey: true
@@ -111,6 +120,7 @@
 - name: Install gitolite
   tags: gitolite
   become: true
+  when: '{{ not gitolite_fact_initial_checkmode }}'
   command: /usr/local/src/gitolite/install -to {{ gitolite_install_dir }}
   args:
     creates: '{{ gitolite_install_dir }}/gitolite'
@@ -141,6 +151,7 @@
   tags: gitolite
   become: true
   become_user: '{{ gitolite_user_name }}'
+  when: '{{ not gitolite_fact_initial_checkmode }}'
   command: '{{ gitolite_install_dir }}/gitolite setup -pk {{ gitolite_user_home }}/.ssh/id_rsa.pub'
   args:
     chdir: '{{ gitolite_user_home }}'
@@ -155,7 +166,14 @@
 
 # manage gitolite installation
 - name: Include admin configuration tasks
-  include: admin.yml
   tags: gitolite
+  include: admin.yml
   when:
     - '{{ (gitolite_repositories + gitolite_repositories_custom)|count != 0 }}'
+
+
+- name: Include facts management
+  tags: gitolite
+  include: '{{ playbook_dir }}/roles/silpion.lib/tasks/localfacts.yml'
+  vars:
+    namespace: gitolite
