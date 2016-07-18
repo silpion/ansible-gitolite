@@ -2,13 +2,3 @@
 gitolite_package_list:
   - git
   - perl
-gitolite_package_list_https:
-  - apache2
-  - openssl
-
-gitolite_httpd_service: apache2
-gitolite_httpd_user_name: www-data
-gitolite_httpd_logs: /var/log/apache2
-gitolite_httpd_sites: /etc/apache2/sites-available
-gitolite_ssl_dir: /etc/ssl
-gitolite_https_htaccess_file: /etc/apache2/gitolite.passwd

@@ -1,3 +1,17 @@
+{% if gitolite_template_use_cow %}
+#   ____________________
+#  < Managed by Ansible >
+#   --------------------
+#          \   ^__^
+#           \  (oo)\_______
+#              (__)\       )\/\
+#                  ||----w |
+#                  ||     ||
+#
+{% else %}
+{{ ansible_managed|comment }}
+{% endif %}
+
 Host localhost
   HashKnownHosts no
   UserKnownHostsFile /dev/null

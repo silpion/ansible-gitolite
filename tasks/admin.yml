@@ -2,40 +2,43 @@
 - name: git clone gitolite-admin
   tags: gitolite
   become: true
-  become_user: "{{ gitolite_user_name }}"
+  become_user: '{{ gitolite_user_name }}'
+  when: '{{ not gitolite_fact_initial_checkmod|default(false) }}'
   git:
     force: true
     accept_hostkey: true
-    repo: "{{ gitolite_user_name }}@localhost:gitolite-admin.git"
+    repo: '{{ gitolite_user_name }}@localhost:gitolite-admin.git'
     remote: origin
-    dest: "{{ gitolite_user_home }}/gitolite-admin"
+    dest: '{{ gitolite_user_home }}/gitolite-admin'
 
 # Install a gitolite repositories configuration file "gitolite.conf"
 - name: Install gitolite.conf
   tags: gitolite
   become: true
-  become_user: "{{ gitolite_user_name }}"
+  become_user: '{{ gitolite_user_name }}'
+  when: '{{ not gitolite_fact_initial_checkmod|default(false) }}'
   register: gitolite_install_gitolite_conf
   template:
     src: gitolite.conf.j2
-    dest: "{{ gitolite_user_home }}/gitolite-admin/conf/gitolite.conf"
+    dest: '{{ gitolite_user_home }}/gitolite-admin/conf/gitolite.conf'
     mode: 0640
-    owner: "{{ gitolite_user_name }}"
-    group: "{{ gitolite_user_group }}"
+    owner: '{{ gitolite_user_name }}'
+    group: '{{ gitolite_user_group }}'
 
 # Install gitolite user accounts for git+ssh
 - name: Install gitolite SSH user accounts
   tags: gitolite
   become: true
-  become_user: "{{ gitolite_user_name }}"
+  become_user: '{{ gitolite_user_name }}'
+  when: '{{ not gitolite_fact_initial_checkmod|default(false) }}'
   register: gitolite_install_gitolite_ssh_user_accounts
   with_items: '{{ gitolite_accounts_ssh }}'
   copy:
     src: files/gitolite/users/ssh/{{ item }}.pub
-    dest: "{{ gitolite_user_home }}/gitolite-admin/keydir/{{ item }}.pub"
+    dest: '{{ gitolite_user_home }}/gitolite-admin/keydir/{{ item }}.pub'
     mode: 0640
-    owner: "{{ gitolite_user_name }}"
-    group: "{{ gitolite_user_group }}"
+    owner: '{{ gitolite_user_name }}'
+    group: '{{ gitolite_user_group }}'
 
 
 # Manage changes inside the gitolite-admin repository
@@ -43,30 +46,36 @@
 - name: git add gitolite-admin
   tags: gitolite
   become: true
-  become_user: "{{ gitolite_user_name }}"
-  when: gitolite_install_gitolite_conf.changed or gitolite_install_gitolite_ssh_user_accounts.changed
+  become_user: '{{ gitolite_user_name }}'
+  when:
+    - '{{ not gitolite_fact_initial_checkmod|default(false) }}'
+    - '{{ gitolite_install_gitolite_conf.changed or gitolite_install_gitolite_ssh_user_accounts.changed }}'
   register: gitolite_git_add_gitolite_admin
   command: git add --all
   args:
-    chdir: "{{ gitolite_user_home }}/gitolite-admin"
+    chdir: '{{ gitolite_user_home }}/gitolite-admin'
 
 #   commit changes
 - name: git commit gitolite-admin
-  become: true
-  become_user: "{{ gitolite_user_name }}"
   tags: gitolite
-  when: gitolite_git_add_gitolite_admin.changed
+  become: true
+  become_user: '{{ gitolite_user_name }}'
+  when:
+    - '{{ not gitolite_fact_initial_checkmod|default(false) }}'
+    - '{{ gitolite_git_add_gitolite_admin.changed }}'
   register: gitolite_git_commit_gitolite_admin
   command: git commit -m 'Updated gitolite-admin by Ansible'
   args:
-    chdir: "{{ gitolite_user_home }}/gitolite-admin"
+    chdir: '{{ gitolite_user_home }}/gitolite-admin'
 
 #   push changes
 - name: git push gitolite-admin
   tags: gitolite
   become: true
-  become_user: "{{ gitolite_user_name }}"
-  when: gitolite_git_commit_gitolite_admin.changed
+  become_user: '{{ gitolite_user_name }}'
+  when:
+    - '{{ not gitolite_fact_initial_checkmod|default(false) }}'
+    - '{{ gitolite_git_commit_gitolite_admin.changed }}'
   command: git push --set-upstream origin master
   args:
-    chdir: "{{ gitolite_user_home }}/gitolite-admin"
+    chdir: '{{ gitolite_user_home }}/gitolite-admin'

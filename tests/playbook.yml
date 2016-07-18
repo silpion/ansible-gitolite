@@ -1,9 +1,0 @@
----
-- hosts: all
-  vars:
-    gitolite_repositories_custom:
-      - repo: toast
-        admin:
-          users: ["id_rsa", "{{ gitolite_user_name }}"]
-  roles:
-    - { role: ansible-gitolite }

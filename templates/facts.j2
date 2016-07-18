@@ -12,9 +12,13 @@
 {{ ansible_managed|comment }}
 {% endif %}
 
-[user]
-  name = {{ gitolite_gitconfig_user_name }}
-  email = {{ gitolite_gitconfig_user_email }}
+[general]
+version = {{ gitolite_version }}
+user_name = "{{ gitolite_user_name }}"
+user_home = "{{ gitolite_user_home }}"
+install_dir = "{{ gitolite_install_dir }}"
 
-[push]
-  default = {{ gitolite_gitconfig_push_default }}
+vendor = "Silpion"
+vendor_url = "http://silpion.de"
+vendor_github = "https://github.com/silpion"
+role_version = "{{ gitolite_role_version }}"

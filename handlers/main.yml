@@ -3,15 +3,8 @@
 - name: gitolite setup
   tags: gitolite
   become: true
-  become_user: "{{ gitolite_user_name }}"
+  become_user: '{{ gitolite_user_name }}'
+  when: '{{ not gitolite_fact_initial_checkmode|default(false) }}'
   action: command {{ gitolite_install_dir }}/gitolite setup
   args:
-    chdir: "{{ gitolite_user_home }}"
-
-
-# httpd server
-- name: service restart httpd
-  tags: gitolite_httpd
-  service:
-    state: restarted
-    name: "{{ gitolite_httpd_service }}"
+    chdir: '{{ gitolite_user_home }}'
