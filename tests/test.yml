@@ -1,0 +1,21 @@
+---
+- name: Test silpion/ansible-gitolite
+  hosts: all
+  vars:
+    gitolite_repositories_custom:
+      - repo: toast
+        admin:
+          users: ["id_rsa", "{{ gitolite_user_name }}"]
+  pre_tasks:
+    - name: Install aliases
+      become: true
+      with_items:
+        - "l='ls -lh'"
+        - "s=systemctl"
+        - "j=journalctl"
+      lineinfile:
+        state: present
+        dest: /root/.bashrc
+        line: "alias {{ item }}"
+  roles:
+    - ansible-gitolite

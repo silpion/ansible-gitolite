@@ -6,6 +6,14 @@
     that:
       - ansible_os_family in gitolite_supported_platform
 
+- name: Detect initial --check mode
+  tags: gitolite
+  when:
+    - '{{ ansible_check_mode }}'
+    - '{{ (ansible_local|default({})).gitolite is not defined }}'
+  set_fact:
+    gitolite_fact_initial_checkmode: true
+
 
 # manage installation of required packages
 - name: Include platform specific vars
@@ -16,10 +24,9 @@
 - name: Install required packages for gitolite
   tags: gitolite
   become: true
-  with_items: gitolite_package_list
-  action: "{{ ansible_pkg_mgr }}"
-  args:
-    state: installed
+  with_items: '{{ gitolite_package_list }}'
+  package:
+    state: '{{ util_package_state|default("installed") }}'
     name: "{{ item }}"
 
 
@@ -32,9 +39,9 @@
     state: present
     system: true
     name: "{{ gitolite_user_group }}"
+
 #   user
 #
-
 - name: Create gitolite user
   tags: gitolite
   become: true
@@ -45,23 +52,23 @@
     ssh_key_bits: 4096
     ssh_key_type: rsa
     ssh_key_comment: "Gitolite Service"
-    name: "{{ gitolite_user_name }}"
-    home: "{{ gitolite_user_home }}"
-    group: "{{ gitolite_user_group }}"
+    name: '{{ gitolite_user_name }}'
+    home: '{{ gitolite_user_home }}'
+    group: '{{ gitolite_user_group }}'
 
 
 - name: Fix SELinux home directory
   tags: gitolite
   become: true
   with_items:
-    - { path: "{{ gitolite_user_home }}", setype: user_home_t }
-    - { path: "{{ gitolite_user_home }}/.ssh", setype: ssh_home_t }
+    - { path: '{{ gitolite_user_home }}', setype: user_home_t }
+    - { path: '{{ gitolite_user_home }}/.ssh', setype: ssh_home_t }
   file:
     state: directory
-    path: "{{ item.path }}"
-    setype: "{{ item.setype }}"
-    owner: "{{ gitolite_user_name }}"
-    group: "{{ gitolite_user_group }}"
+    path: '{{ item.path }}'
+    setype: '{{ item.setype }}'
+    owner: '{{ gitolite_user_name }}'
+    group: '{{ gitolite_user_group }}'
 
 
 # manage gitolite users' ssh configuration
@@ -70,10 +77,10 @@
   become: true
   template:
     src: ssh_config.j2
-    dest: "{{ gitolite_user_home }}/.ssh/config"
+    dest: '{{ gitolite_user_home }}/.ssh/config'
     mode: 0600
-    owner: "{{ gitolite_user_name }}"
-    group: "{{ gitolite_user_group }}"
+    owner: '{{ gitolite_user_name }}'
+    group: '{{ gitolite_user_group }}'
 
 # manage gitolite users' git configuration
 - name: Install gitolite git configuration
@@ -81,10 +88,10 @@
   become: true
   template:
     src: gitconfig.j2
-    dest: "{{ gitolite_user_home }}/.gitconfig"
+    dest: '{{ gitolite_user_home }}/.gitconfig'
     mode: 0600
-    owner: "{{ gitolite_user_name }}"
-    group: "{{ gitolite_user_group }}"
+    owner: '{{ gitolite_user_name }}'
+    group: '{{ gitolite_user_group }}'
 
 
 # setup gitolite
@@ -93,7 +100,7 @@
   become: true
   file:
     state: directory
-    dest: "{{ gitolite_install_dir }}"
+    dest: '{{ gitolite_install_dir }}'
     mode: 0755
     owner: 0
     group: 0
@@ -101,10 +108,11 @@
 - name: git clone gitolite
   tags: gitolite
   become: true
+  when: '{{ not gitolite_fact_initial_checkmode|default(false) }}'
   git:
     force: true
-    repo: "{{ gitolite_url }}"
-    version: "{{ gitolite_tag }}"
+    repo: '{{ gitolite_clone_url }}'
+    version: '{{ gitolite_version }}'
     remote: github
     dest: /usr/local/src/gitolite
     accept_hostkey: true
@@ -112,9 +120,10 @@
 - name: Install gitolite
   tags: gitolite
   become: true
+  when: '{{ not gitolite_fact_initial_checkmode|default(false) }}'
   command: /usr/local/src/gitolite/install -to {{ gitolite_install_dir }}
   args:
-    creates: "{{ gitolite_install_dir }}/gitolite"
+    creates: '{{ gitolite_install_dir }}/gitolite'
 
 - name: Install gitolite configuration
   tags: gitolite
@@ -122,30 +131,31 @@
   notify: gitolite setup
   template:
     src: gitolite.rc.j2
-    dest: "{{ gitolite_user_home }}/.gitolite.rc"
+    dest: '{{ gitolite_user_home }}/.gitolite.rc'
     mode: 0640
-    owner: "{{ gitolite_user_name }}"
-    group: "{{ gitolite_user_group }}"
+    owner: '{{ gitolite_user_name }}'
+    group: '{{ gitolite_user_group }}'
 
 - name: Install gitolite shell user list
   tags: gitolite
   become: true
-  when: gitolite_gitoliterc_shell_user_list|count != 0
+  when: '{{ gitolite_gitoliterc_shell_user_list|count != 0 }}'
   template:
     src: gitolite.rc.shell_user.j2
-    dest: "{{ gitolite_user_home }}/.gitolite.rc.shell_user"
+    dest: '{{ gitolite_user_home }}/.gitolite.rc.shell_user'
     mode: 0640
-    owner: "{{ gitolite_user_name }}"
-    group: "{{ gitolite_user_group }}"
+    owner: '{{ gitolite_user_name }}'
+    group: '{{ gitolite_user_group }}'
 
 - name: Initialize gitolite
   tags: gitolite
   become: true
-  become_user: "{{ gitolite_user_name }}"
-  command: "{{ gitolite_install_dir }}/gitolite setup -pk {{ gitolite_user_home }}/.ssh/id_rsa.pub"
+  become_user: '{{ gitolite_user_name }}'
+  when: '{{ not gitolite_fact_initial_checkmode|default(false) }}'
+  command: '{{ gitolite_install_dir }}/gitolite setup -pk {{ gitolite_user_home }}/.ssh/id_rsa.pub'
   args:
-    chdir: "{{ gitolite_user_home }}"
-    creates: "{{ gitolite_user_home }}/.gitolite"
+    chdir: '{{ gitolite_user_home }}'
+    creates: '{{ gitolite_user_home }}/.gitolite'
 
 
 # configure smart-https for gitolite
@@ -155,8 +165,15 @@
 
 
 # manage gitolite installation
-- include: admin.yml
+- name: Include admin configuration tasks
   tags: gitolite
+  include: admin.yml
   when:
-    - gitolite_repositories|count != 0
-    - gitolite_repositories_custom|count != 0
+    - '{{ (gitolite_repositories + gitolite_repositories_custom)|count != 0 }}'
+
+
+- name: Include facts management
+  tags: gitolite
+  include: '{{ playbook_dir }}/roles/silpion.lib/tasks/localfacts.yml'
+  vars:
+    namespace: gitolite
