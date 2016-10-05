@@ -128,3 +128,6 @@ gitolite_accounts_ssh: []
 
 # gitolite mirroring
 gitolite_mirroring_peers: []
+
+# path to lib role
+gitolite_path_to_lib_role: '{{ lib_roles_path|default(playbook_dir + "/roles") }}'
