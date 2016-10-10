@@ -40,6 +40,7 @@ This role installs and configures gitolite from upstream Git repository.
 * `gitolite_domainname`: Configure the gitolite server domainname (string, default: `localdomain`)
 * `gitolite_mirroring_peers`: Configure ssh aliases for mirroring (list, default: `[]`)
 * `gitolite_template_use_cow`: Whether to use a cow in templates rather than `ansible_managed` (boolean, default: `{{ util_template_use_cow|default(true) }}` -> `true`)
+* `gitolite_path_to_lib_role`: Workaround: Configure path to silpion.lib role (if necessary) (string, default: `{{ lib_roles_path|default(playbook_dir + '/roles') }}`)
 
 ### ~/.gitconfig related configuration
 
