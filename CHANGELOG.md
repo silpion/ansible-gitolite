@@ -1,3 +1,9 @@
+# 2.1.1
+
+Mark Kusch (1):
+
+* Make path to silpion.lib role configurable
+
 # 2.1.0
 
 Dick Visser (2):
