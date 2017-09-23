@@ -17,6 +17,8 @@ repo {{ r.repo }}
 {% if 'admin' in r and r['admin']|count > 0 -%}
 {% if 'users' in r['admin'] and r['admin']['users']|count > 0 -%}
 {% set perma = "  RW+ = " + r['admin']['users']|join(" ") -%}
+{% else -%}
+{% set perma = "" -%}
 {%- endif %}
 {% if perma|count > 0 -%}
 {{ perma }}
@@ -52,18 +54,21 @@ repo {{ r.repo }}
 
 {% macro iter_repos(repositories) -%}
 {% for repo in repositories -%}
+{% with -%}
+{% set valid_rules = [] -%}
 {% for ace in ('admin', 'write', 'read') -%}
 {% if ace in repo -%}
 {% for arg in ('options', 'users') -%}
 {% if arg in repo[ace] -%}
-{% set create_repo = true -%}
+{% if valid_rules.append('') %}{% endif %}
 {%- endif %}
 {%- endfor %}
 {%- endif %}
 {%- endfor %}
-{% if create_repo -%}
+{% if valid_rules|length > 0 -%}
 {{ gitolite_repo(repo) }}
 {%- endif %}
+{%- endwith %}
 {%- endfor %}
 {%- endmacro %}
 

@@ -10,7 +10,8 @@ This role installs and configures gitolite from upstream Git repository.
   vars:
     gitolite_repositories_custom:
       - repo: toast
-        admin: ["id_rsa", "{{ gitolite_user_name }}"]
+        admin:
+          users: ["id_rsa", "{{ gitolite_user_name }}"]
   roles:
     - ansible-gitolite
 ```
